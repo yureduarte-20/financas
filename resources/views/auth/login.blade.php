@@ -1,7 +1,7 @@
 <x-auth-layout>
     <div class="mb-8">
         <h1 class="text-2xl font-bold mb-2">Bem-vindo de volta!</h1>
-        <p class="text-[#706f6c] dark:text-[#A1A09A]">Entre com suas credenciais para acessar o painel.</p>
+        <p class="text-gray-500 dark:text-dark-muted">Entre com suas credenciais para acessar o painel.</p>
     </div>
 
     <form method="POST" action="{{ route('login') }}" class="space-y-4">
@@ -34,7 +34,7 @@
         <div class="flex items-center justify-between mt-4">
             <!-- Remember Me -->
             <label for="remember_me" class="inline-flex items-center">
-                <input id="remember_me" type="checkbox" class="rounded dark:bg-neutral-900 border-gray-300 dark:border-neutral-700 text-primary shadow-sm focus:ring-primary" name="remember">
+                <input id="remember_me" type="checkbox" class="rounded dark:bg-dark-bg border-gray-300 dark:border-dark-border text-primary shadow-sm focus:ring-primary" name="remember">
                 <span class="ms-2 text-sm text-gray-600 dark:text-gray-400">Lembrar-me</span>
             </label>
 

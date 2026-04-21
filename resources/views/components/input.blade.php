@@ -13,11 +13,11 @@
     // Verifica se há erros de validação para este campo
     $hasError = $errors->has($name);
     // Classes base do input
-    $inputClasses = 'py-2.5 sm:py-3 px-4 block w-full rounded-lg sm:text-sm dark:bg-neutral-800 dark:text-neutral-400';
+    $inputClasses = 'py-2.5 sm:py-3 px-4 block w-full rounded-lg sm:text-sm dark:bg-dark-surface dark:text-dark-muted';
     // Adiciona classes de borda com base na validação
     $inputClasses .= $hasError
         ? ' border-danger focus:border-danger focus:ring-danger'
-        : ' border-neutral-200 focus:border-primary focus:ring-primary dark:border-neutral-700';
+        : ' border-neutral-200 focus:border-primary focus:ring-primary dark:border-dark-border';
     // Adiciona classes para estado disabled/readonly
     $inputClasses .= $disabled || $readonly ? ' bg-gray-100 dark:bg-neutral-700' : '';
 @endphp

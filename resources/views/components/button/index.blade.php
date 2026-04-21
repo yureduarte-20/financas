@@ -18,7 +18,7 @@
         'danger' => 'bg-danger hover:bg-danger-hover text-danger-foreground',
         'warning' => 'bg-warning hover:bg-warning-hover text-warning-foreground',
         'light' => 'bg-white hover:bg-gray-200 text-gray-800',
-        'dark' => 'bg-neutral-800 hover:bg-neutral-900 text-white dark:bg-white dark:text-neutral-800',
+        'dark' => 'bg-neutral-800 hover:bg-neutral-900 text-white dark:bg-dark-text dark:text-neutral-800',
     ];
 
     // Mapeamento de tamanhos

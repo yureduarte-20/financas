@@ -64,6 +64,47 @@ As páginas da aplicação **devem ser construídas utilizando os componentes Bl
 
 <x-button color="primary" type="submit">Salvar</x-button>
 <x-button.outline color="danger" wire:click="cancelar">Cancelar</x-button.outline>
+...
+```
+
+---
+
+## 🎨 Design System & Cores
+
+O projeto utiliza um sistema de **Tokens Semânticos** configurado no `resources/css/app.css` (Tailwind CSS v4). Isso garante que a identidade visual seja consistente e fácil de manter.
+
+### Escolhas Cromáticas (Identidade)
+
+| Tipo | Cor Base | Descrição |
+| :--- | :--- | :--- |
+| **Primary** | `Azul Céu` | Cor principal para ações, marca e estados ativos. |
+| **Accent** | `Âmbar` | Cor de destaque para chamadas de atenção e detalhes. |
+
+### Tokens Semânticos (Uso Geral)
+
+Utilize estes tokens para garantir que as cores de estado sejam consistentes:
+- `primary`, `accent`, `success`, `danger`, `warning`, `info`, `surface`.
+
+Exemplo: `bg-primary`, `text-danger`, `border-success`.
+
+### Suporte ao Modo Escuro (Dark Mode)
+
+A aplicação possui suporte nativo ao modo escuro com tokens específicos:
+
+| Token | Finalidade | Cor (Dark) |
+| :--- | :--- | :--- |
+| `dark-bg` | Fundo principal da página | `#0a0a0a` |
+| `dark-surface` | Fundo de cards, sidebar e dropdowns | `#161615` |
+| `dark-border` | Divisórias e bordas sutis | `#1e1e1e` |
+| `dark-text` | Texto principal (alta legibilidade) | `#ededec` |
+| `dark-muted` | Texto secundário ou desativado | `#a1a1aa` |
+
+**Exemplo de implementação robusta:**
+```html
+<div class="bg-white dark:bg-dark-surface border-gray-200 dark:border-dark-border">
+    <p class="text-gray-900 dark:text-dark-text">Conteúdo Principal</p>
+    <p class="text-gray-500 dark:text-dark-muted">Informação secundária</p>
+</div>
 ```
 
 ---

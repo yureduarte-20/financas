@@ -26,7 +26,7 @@
         'light' =>
             'border-white text-white hover:bg-white/10',
         'dark' =>
-            'border-neutral-800 text-neutral-800 dark:border-neutral-400 dark:text-neutral-400 hover:bg-neutral-800/10 dark:hover:bg-neutral-400/10',
+            'border-neutral-800 text-neutral-800 dark:border-neutral-400 dark:text-dark-muted hover:bg-neutral-800/10 dark:hover:bg-neutral-400/10',
     ];
 
     // Mapeamento de tamanhos (mesmo do componente anterior)

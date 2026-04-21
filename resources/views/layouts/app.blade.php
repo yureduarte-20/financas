@@ -9,6 +9,14 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>{{ config('app.name', 'Laravel') }}</title>
+    
+    <script>
+        if (localStorage.getItem('hs_theme') === 'dark' || (!('hs_theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+            document.documentElement.classList.add('dark');
+        } else {
+            document.documentElement.classList.remove('dark');
+        }
+    </script>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
@@ -21,7 +29,7 @@
 
 </head>
 
-<body class="">
+<body class="bg-[#FDFDFC] dark:bg-dark-bg text-[#1b1b18] dark:text-dark-text min-h-screen font-sans antialiased">
     {{ $slot }}
     @livewireScripts
 </body>

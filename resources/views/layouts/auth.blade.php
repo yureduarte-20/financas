@@ -1,11 +1,18 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-[#FDFDFC] dark:bg-[#0a0a0a]">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" class="h-full bg-[#FDFDFC] dark:bg-dark-bg">
     <head>
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>{{ config('app.name', 'Laravel') }}</title>
+    <script>
+        if (localStorage.getItem("hs_theme") === "dark" || (!("hs_theme" in localStorage) && window.matchMedia("(prefers-color-scheme: dark)").matches)) {
+            document.documentElement.classList.add("dark");
+        } else {
+            document.documentElement.classList.remove("dark");
+        }
+    </script>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -15,7 +22,7 @@
         @vite(['resources/css/app.css', 'resources/js/app.js'])
         @livewireStyles
     </head>
-    <body class="bg-[#FDFDFC] dark:bg-[#0a0a0a] text-[#1b1b18] flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col font-sans antialiased">
+    <body class="bg-[#FDFDFC] dark:bg-dark-bg text-gray-900 flex p-6 lg:p-8 items-center lg:justify-center min-h-screen flex-col font-sans antialiased">
         <div class="flex items-center justify-center w-full transition-opacity opacity-100 duration-750 lg:grow starting:opacity-0">
             <main class="flex max-w-[335px] w-full flex-col lg:max-w-4xl lg:flex-row">
                 <!-- Branding Section -->
@@ -31,7 +38,7 @@
                 </div>
 
                 <!-- Form Section -->
-                <div class="text-[13px] leading-[20px] flex-1 p-6 lg:p-12 bg-white dark:bg-[#161615] dark:text-[#EDEDEC] shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tr-lg lg:rounded-bl-none z-10 flex flex-col justify-center">
+                <div class="text-[13px] leading-[20px] flex-1 p-6 lg:p-12 bg-white dark:bg-dark-surface dark:text-dark-text shadow-[inset_0px_0px_0px_1px_rgba(26,26,0,0.16)] dark:shadow-[inset_0px_0px_0px_1px_#fffaed2d] rounded-bl-lg rounded-br-lg lg:rounded-tr-lg lg:rounded-bl-none z-10 flex flex-col justify-center">
                     {{ $slot }}
                 </div>
             </main>

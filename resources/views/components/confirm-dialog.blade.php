@@ -94,13 +94,13 @@
         x-transition:leave-end="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95">
         <div class="sm:max-w-lg sm:w-full m-3 sm:mx-auto">
             <div
-                class="flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-neutral-800 dark:border-neutral-700 dark:shadow-neutral-700/70">
+                class="flex flex-col bg-white border border-gray-200 shadow-2xs rounded-xl pointer-events-auto dark:bg-dark-surface dark:border-dark-border dark:shadow-neutral-700/70">
                 <div
-                    class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-neutral-700">
+                    class="flex justify-between items-center py-3 px-4 border-b border-gray-200 dark:border-dark-border">
                     <h3 id="{{ $id }}-label" class="font-bold text-gray-800 dark:text-white" x-text="title">
                     </h3>
                     <button type="button"
-                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-neutral-400 dark:focus:bg-neutral-600"
+                        class="size-8 inline-flex justify-center items-center gap-x-2 rounded-full border border-transparent bg-gray-100 text-gray-800 hover:bg-gray-200 focus:outline-hidden focus:bg-gray-200 disabled:opacity-50 disabled:pointer-events-none dark:bg-neutral-700 dark:hover:bg-neutral-600 dark:text-dark-muted dark:focus:bg-neutral-600"
                         aria-label="Close" x-on:click="resetTransition()">
                         <span class="sr-only">Close</span>
                         <svg class="shrink-0 size-4" xmlns="http://www.w3.org/2000/svg" width="24" height="24"
@@ -112,10 +112,10 @@
                     </button>
                 </div>
                 <div class="p-4 overflow-y-auto">
-                    <p class="mt-1 text-gray-800 dark:text-neutral-400" x-text="description"></p>
+                    <p class="mt-1 text-gray-800 dark:text-dark-muted" x-text="description"></p>
                 </div>
                 <div
-                    class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-neutral-700">
+                    class="flex justify-end items-center gap-x-2 py-3 px-4 border-t border-gray-200 dark:border-dark-border">
                     <x-button color="danger" x-on:click="reject" x-text="rejectLabel" />
                     <x-button color="primary" type="button" x-on:click="accept" x-text="acceptLabel" />
                 </div>
