@@ -5,7 +5,7 @@ Sistema de Gerenciamento de Gastos e Ganhos com IA
 
 **Documento de Visão, Requisitos Funcionais e Casos de Uso**
 
-Versão 1.0  •  Abril de 2026
+Versão 1.1  •  Abril de 2026
 
 *Sistema Pessoal de Uso Individual*
 
@@ -44,11 +44,11 @@ Pessoa física que deseja controlar suas finanças de forma simples, sem precisa
 | Camada | Tecnologia / Componente |
 | :---- | :---- |
 | **IA / LLM** | Claude (Anthropic) — interpretação de documentos e categorização |
-| **Frontend** | Livewire ou App Mobile simples |
-| **Backend** | PHP Laravel com API REST |
+| **Frontend** | Web (React ou Next.js) ou App Mobile simples |
+| **Backend** | Node.js / Python com API REST |
 | **Banco de Dados** | SQLite (local) ou PostgreSQL (nuvem) |
 | **Armazenamento** | Sistema de arquivos local ou S3 para documentos |
-| **Autenticação** | Login com e-mail e senha, e verificação dupla com código via email |
+| **Autenticação** | Login simples com e-mail e senha (JWT) |
 
 # **2\. Requisitos Funcionais**
 
@@ -61,6 +61,7 @@ Os requisitos funcionais estão organizados em módulos. A prioridade segue a co
 | **RF-01** | O sistema deve permitir o cadastro do usuário com nome, e-mail e senha. | **Alta** | Autenticação |
 | **RF-02** | O sistema deve autenticar o usuário via login com e-mail e senha. | **Alta** | Autenticação |
 | **RF-03** | O sistema deve permitir recuperação de senha por e-mail. | **Média** | Autenticação |
+| **RF-04** | O usuário deve poder definir sua moeda padrão (Real, Dólar, Euro). | **Média** | Perfil |
 
 ## **2.2 Módulo: Transações**
 
@@ -232,7 +233,113 @@ Os casos de uso a seguir descrevem as principais interações do usuário com o 
 | **documento\_url** | TEXT | Caminho do arquivo original (opcional) |
 | **criado\_em** | TIMESTAMP | Data de criação do registro |
 
-# **6\. Roadmap de Desenvolvimento Sugerido**
+# **6\. Integração com Telegram (Chatbot)**
+
+O FinançasPessoais oferece um chatbot no Telegram como canal alternativo de interação. O objetivo é permitir que o usuário registre transações, consulte saldos e envie documentos diretamente pelo Telegram, sem precisar abrir o aplicativo principal — ideal para uso no dia a dia e em mobilidade.
+
+## **6.1 Visão Geral da Integração**
+
+| Como funciona O bot é criado via @BotFather no Telegram e recebe um token de acesso à API. O backend do FinançasPessoais registra um webhook para receber todas as mensagens enviadas ao bot. Cada usuário do sistema vincula sua conta ao Telegram por meio de um código de ativação único. O bot aceita comandos de texto, mensagens em linguagem natural e envio de imagens/PDFs. Mensagens em linguagem natural são processadas pelo Claude para extração de intenção e dados. |
+| :---- |
+
+## **6.2 Requisitos Funcionais — Módulo Telegram**
+
+| ID | Descrição | Prioridade | Módulo |
+| :---- | :---- | :---- | :---- |
+| **RF-31** | O sistema deve permitir que o usuário vincule sua conta ao Telegram mediante código de ativação gerado no app. | **Alta** | Telegram |
+| **RF-32** | O bot deve aceitar o comando /start para iniciar a vinculação ou exibir menu de ajuda. | **Alta** | Telegram |
+| **RF-33** | O bot deve aceitar o comando /saldo para retornar o resumo financeiro do mês atual (receitas, despesas e saldo). | **Alta** | Telegram |
+| **RF-34** | O bot deve aceitar o comando /extrato para listar as últimas 5 transações do usuário. | **Alta** | Telegram |
+| **RF-35** | O bot deve aceitar mensagens em linguagem natural para registrar despesas (ex.: 'gastei 45 reais no almoço'). | **Alta** | Telegram |
+| **RF-36** | O bot deve aceitar mensagens em linguagem natural para registrar receitas (ex.: 'recebi 3000 de salário hoje'). | **Alta** | Telegram |
+| **RF-37** | O bot deve processar imagens e PDFs de faturas ou recibos enviados pelo usuário, usando o Claude para extração. | **Alta** | Telegram |
+| **RF-38** | Após extração via IA, o bot deve solicitar confirmação do usuário antes de salvar a transação. | **Alta** | Telegram |
+| **RF-39** | O bot deve enviar notificações proativas quando uma categoria ultrapassar 80% do orçamento definido. | **Média** | Telegram |
+| **RF-40** | O bot deve enviar um resumo financeiro semanal automático toda segunda-feira de manhã. | **Média** | Telegram |
+| **RF-41** | O bot deve aceitar o comando /ajuda listando todos os comandos disponíveis. | **Média** | Telegram |
+| **RF-42** | O bot deve aceitar o comando /categorias para listar as categorias disponíveis. | **Média** | Telegram |
+| **RF-43** | O bot deve permitir desvincular a conta com o comando /desconectar. | **Média** | Telegram |
+| **RF-44** | O bot deve responder em no máximo 5 segundos para mensagens simples de texto. | **Alta** | Telegram |
+| **RF-45** | O bot deve tratar mensagens ambíguas pedindo confirmação ou esclarecimento ao usuário. | **Média** | Telegram |
+
+## **6.3 Comandos do Bot**
+
+| Comando | Descrição | Exemplo de uso |
+| :---- | :---- | :---- |
+| **/start** | Inicia o bot e exibe instruções de vinculação. | */start* |
+| **/saldo** | Exibe resumo financeiro do mês atual. | */saldo* |
+| **/extrato** | Lista as últimas 5 transações. | */extrato* |
+| **/categorias** | Lista as categorias disponíveis. | */categorias* |
+| **/ajuda** | Exibe lista de todos os comandos. | */ajuda* |
+| **/desconectar** | Desvincula a conta do Telegram. | */desconectar* |
+| **Texto livre** | Registra despesa ou receita em linguagem natural. | *Gastei R$32 no mercado* |
+| **Foto / PDF** | Envia fatura ou recibo para interpretação automática via IA. | *(enviar arquivo)* |
+
+## **6.4 Casos de Uso — Telegram**
+
+### **UC-08: Vincular Conta ao Telegram**
+
+| UC-08 — Vincular Conta ao Telegram |  |
+| :---- | :---- |
+| **Identificador** | UC-08 |
+| **Nome** | Vincular Conta ao Telegram |
+| **Ator Principal** | Usuário |
+| **Pré-condições** | Usuário autenticado no app web. Possui conta no Telegram. |
+| **Fluxo Principal** | 1\. Usuário acessa Configurações \> Telegram no app web. 2\. Sistema gera um código de ativação de 6 dígitos com validade de 10 minutos. 3\. Usuário abre o bot @FinancasPessoaisBot no Telegram e envia /start. 4\. Bot solicita o código de ativação. 5\. Usuário envia o código. 6\. Sistema valida o código e vincula o chat\_id do Telegram à conta. 7\. Bot confirma a vinculação e exibe o menu de comandos. |
+| **Fluxos Alternativos** | 5a. Código expirado: bot informa expiração e solicita gerar novo código no app. 5b. Código inválido: bot informa erro e permite nova tentativa (até 3 vezes). |
+| **Pós-condições** | Conta vinculada. Usuário pode usar o bot para interagir com o sistema. |
+
+### **UC-09: Registrar Despesa via Telegram (Linguagem Natural)**
+
+| UC-09 — Registrar Despesa via Linguagem Natural no Telegram |  |
+| :---- | :---- |
+| **Identificador** | UC-09 |
+| **Nome** | Registrar Despesa via Linguagem Natural no Telegram |
+| **Ator Principal** | Usuário |
+| **Pré-condições** | Conta vinculada ao Telegram (UC-08 concluído). |
+| **Fluxo Principal** | 1\. Usuário envia mensagem de texto ao bot (ex.: 'Gastei 45 reais no almoço hoje'). 2\. Backend recebe a mensagem e envia ao Claude com contexto de extração de transação. 3\. Claude identifica: tipo=DESPESA, valor=45.00, descrição='Almoço', data=hoje, categoria sugerida='Alimentação'. 4\. Bot responde com resumo formatado e botões de confirmação: \[Confirmar\] \[Editar\] \[Cancelar\]. 5\. Usuário toca em \[Confirmar\]. 6\. Sistema salva a transação e bot confirma o registro. |
+| **Fluxos Alternativos** | 3a. Claude não consegue extrair valor ou data: bot pede complemento ao usuário. 5a. Usuário toca \[Editar\]: bot solicita o campo a corrigir em nova mensagem. 5b. Usuário toca \[Cancelar\]: nenhuma transação é salva. |
+| **Pós-condições** | Despesa registrada no sistema, visível no dashboard e relatórios. |
+
+### **UC-10: Enviar Fatura pelo Telegram para Interpretação via IA**
+
+| UC-10 — Enviar Fatura pelo Telegram para Interpretação via IA |  |
+| :---- | :---- |
+| **Identificador** | UC-10 |
+| **Nome** | Enviar Fatura pelo Telegram para Interpretação via IA |
+| **Ator Principal** | Usuário |
+| **Pré-condições** | Conta vinculada ao Telegram. |
+| **Fluxo Principal** | 1\. Usuário fotografa um recibo e envia a imagem ao bot (ou envia um PDF). 2\. Bot confirma recebimento e informa que está processando. 3\. Backend baixa o arquivo da API do Telegram e envia ao Claude para extração. 4\. Claude retorna: estabelecimento, data, valor total e itens. 5\. Bot exibe os dados extraídos com botões \[Confirmar\] \[Editar\] \[Cancelar\]. 6\. Usuário confirma. 7\. Sistema salva a transação com o documento vinculado. |
+| **Fluxos Alternativos** | 3a. Arquivo corrompido ou ilegível: bot informa erro e solicita novo envio. 4a. Claude não consegue identificar dados financeiros: bot sugere cadastro manual. |
+| **Pós-condições** | Transação salva com documento original anexado, acessível via app web. |
+
+### **UC-11: Consultar Saldo pelo Telegram**
+
+| UC-11 — Consultar Saldo pelo Telegram |  |
+| :---- | :---- |
+| **Identificador** | UC-11 |
+| **Nome** | Consultar Saldo pelo Telegram |
+| **Ator Principal** | Usuário |
+| **Pré-condições** | Conta vinculada ao Telegram. |
+| **Fluxo Principal** | 1\. Usuário envia /saldo. 2\. Sistema busca as transações do mês atual. 3\. Bot responde com mensagem formatada: total de receitas, total de despesas, saldo líquido e alerta de categorias acima do orçamento (se houver). |
+| **Fluxos Alternativos** | 2a. Nenhuma transação no mês: bot informa saldo zerado e sugere registrar a primeira transação. |
+| **Pós-condições** | Usuário visualiza panorama financeiro do mês diretamente no Telegram. |
+
+## **6.5 Fluxo Técnico da Integração**
+
+| Arquitetura do Bot Telegram 1\. Telegram envia evento via Webhook POST para o endpoint /telegram/webhook do backend. 2\. Backend autentica o chat\_id do remetente consultando a tabela de contas vinculadas. 3\. Backend classifica o tipo de mensagem: comando (/start, /saldo...), texto livre ou mídia (foto/PDF). 4\. Para texto livre e mídia: backend chama a API do Claude com o conteúdo e um system prompt específico. 5\. Claude retorna JSON estruturado com os dados extraídos. 6\. Backend monta a resposta e envia de volta ao usuário via Telegram Bot API (sendMessage / sendButtons). 7\. Após confirmação do usuário, backend persiste a transação no banco de dados. |
+| :---- |
+
+## **6.6 Notificações Proativas**
+
+| Evento | Mensagem Enviada | Gatilho |
+| :---- | :---- | :---- |
+| **Orçamento em 80%** | *⚠️ Você já usou 80% do orçamento de \[Categoria\] este mês.* | Ao registrar transação |
+| **Orçamento estourado** | *🚨 Limite de \[Categoria\] ultrapassado\! Gasto: R$X / Limite: R$Y.* | Ao registrar transação |
+| **Resumo semanal** | *📊 Resumo da semana: Receitas R$X | Despesas R$Y | Saldo R$Z.* | Toda segunda-feira 8h |
+| **Resumo mensal** | *📅 Fechamento de \[Mês\]: saldo final R$X. Veja o relatório completo no app.* | 1º dia do mês seguinte |
+
+# **7\. Roadmap de Desenvolvimento Sugerido**
 
 ## **Fase 1 — MVP (4 a 6 semanas)**
 
@@ -262,6 +369,18 @@ Os casos de uso a seguir descrevem as principais interações do usuário com o 
 
 * **RF-22:** Categorias personalizadas.
 
-| Controle de Versões do Documento v1.0 — Abril/2026: Versão inicial com visão, requisitos e casos de uso. |
+## **Fase 4 — Integração Telegram (2 a 3 semanas)**
+
+* **RF-31, 32:** Criação do bot e configuração do webhook.
+
+* **RF-33, 34, 41, 42:** Comandos /saldo, /extrato, /ajuda, /categorias.
+
+* **RF-35, 36:** Registro por linguagem natural (texto).
+
+* **RF-37, 38:** Upload de documentos pelo bot com interpretação via IA.
+
+* **RF-39, 40:** Notificações proativas (orçamento e resumo semanal).
+
+| Controle de Versões do Documento v1.0 — Abril/2026: Versão inicial com visão, requisitos e casos de uso. v1.1 — Abril/2026: Adicionada seção 6 — Integração com Telegram (chatbot). |
 | :---- |
 
