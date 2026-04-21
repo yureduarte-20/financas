@@ -21,7 +21,7 @@ class RegisterRequest extends FormRequest
         $this->merge([
             'cpf' => preg_replace('/[^0-9]/', '', (string) $this->cpf),
         ]);
-        
+
         $this->ensureIsNotRateLimited();
     }
 
@@ -35,14 +35,13 @@ class RegisterRequest extends FormRequest
         return [
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            'cpf' => ['required', 'string', 'size:11', 'unique:users', new \App\Rules\Cpf()],
             'password' => ['required', 'confirmed', 'min:8'],
         ];
     }
 
     public function ensureIsNotRateLimited(): void
     {
-        if (! RateLimiter::tooManyAttempts($this->throttleKey(), 3)) {
+        if (!RateLimiter::tooManyAttempts($this->throttleKey(), 3)) {
             RateLimiter::hit($this->throttleKey());
             return;
         }

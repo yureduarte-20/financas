@@ -11,10 +11,6 @@
         <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus
             autocomplete="name" label="Nome Completo" />
 
-        <!-- CPF -->
-        <x-input x-mask="999.999.999-99" id="cpf" class="block mt-1 w-full" type="text" name="cpf" :value="old('cpf')"
-            required label="CPF" />
-
         <!-- Email Address -->
         <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
             autocomplete="username" label="E-mail" />
