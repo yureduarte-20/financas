@@ -8,7 +8,7 @@ erDiagram
     }
 
     documents {
-        string id PK
+        int id PK
         string name
         string sha1
         int size
@@ -37,14 +37,14 @@ erDiagram
     }
 
     category {
-        string id PK
+        int id PK
         string name
         string description
         int user_id FK
     }
 
     recurrent_transaction {
-        string id PK
+        int id PK
         string name
         string description
         int category_id FK
