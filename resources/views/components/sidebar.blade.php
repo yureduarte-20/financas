@@ -194,13 +194,26 @@
                     <a href="#" wire:navigate @class([
                         'flex items-center px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-colors duration-200',
                         'bg-primary-50 border-primary-500 text-primary-700 dark:bg-primary-950/50 dark:border-primary-400 dark:text-primary-300' => request()->routeIs('profile'),
-                        'text-gray-700 hover:bg-gray-50 hover:text-gray-900 border-transparent dark:text-dark-muted dark:hover:bg-dark-surface-hover/50 dark:hover:text-neutral-100' => !request()->routeIs('profile'),
+                        'text-gray-700 hover:bg-gray-50 hover:text-gray-900 border-transparent dark:text-dark-muted dark:hover:bg-neutral-800/50 dark:hover:text-neutral-100' => !request()->routeIs('profile'),
                     ])>
                         <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
                                 d="M16 7a4 4 0 11-8 0 4 4 0 018 0zM12 14a7 7 0 00-7 7h14a7 7 0 00-7-7z" />
                         </svg>
                         {{ __('Profile') }}
+                    </a>
+
+                    <!-- Style Guide Link -->
+                    <a href="{{ route('style-guide') }}" wire:navigate @class([
+                        'flex items-center px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-colors duration-200',
+                        'bg-primary-50 border-primary-500 text-primary-700 dark:bg-primary-950/50 dark:border-primary-400 dark:text-primary-300' => request()->routeIs('style-guide'),
+                        'text-gray-700 hover:bg-gray-50 hover:text-gray-900 border-transparent dark:text-dark-muted dark:hover:bg-neutral-800/50 dark:hover:text-neutral-100' => !request()->routeIs('style-guide'),
+                    ])>
+                        <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M4 5a1 1 0 011-1h14a1 1 0 011 1v2a1 1 0 01-1 1H5a1 1 0 01-1-1V5zM4 13a1 1 0 011-1h6a1 1 0 011 1v6a1 1 0 01-1 1H5a1 1 0 01-1-1v-6zM16 13a1 1 0 011-1h2a1 1 0 011 1v6a1 1 0 01-1 1h-2a1 1 0 01-1-1v-6z" />
+                        </svg>
+                        {{ __('Style Guide') }}
                     </a>
                 </div>
             </div>

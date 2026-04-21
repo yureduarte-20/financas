@@ -28,5 +28,6 @@ Route::middleware('guest')->group(function () {
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
     Route::get('/profile', fn() => view('dashboard'))->name('profile');
+    Route::get('/style-guide', fn() => view('style-guide'))->name('style-guide');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 });
