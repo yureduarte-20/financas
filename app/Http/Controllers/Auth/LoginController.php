@@ -22,13 +22,24 @@ class LoginController extends Controller
     /**
      * Handle an incoming authentication request.
      */
-    public function store(LoginRequest $request): RedirectResponse
-    {
+    public function store(
+        LoginRequest $request,
+        \App\Actions\Auth\GenerateAuthCodeAction $generateCode
+    ): RedirectResponse {
         $request->authenticate();
 
-        $request->session()->regenerate();
+        // Validamos a senha, mas não permitimos o acesso ainda.
+        // Pegamos o e-mail do request para o 2FA
+        $email = $request->email;
+        
+        // Desloga o usuário se o Auth::attempt logou automaticamente (o LoginRequest costuma logar)
+        Auth::logout();
 
-        return redirect()->intended(route('dashboard', absolute: false));
+        $generateCode->execute($email, 'login');
+
+        session(['auth.email' => $email, 'auth.remember' => $request->boolean('remember')]);
+
+        return redirect()->route('auth.verify.login');
     }
 
     /**

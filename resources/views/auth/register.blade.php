@@ -22,7 +22,6 @@
         <!-- Confirm Password -->
         <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation"
             required autocomplete="new-password" label="Confirmar Senha" />
-
         <div class="mt-6">
             <x-button full-width type="submit">
                 Registrar

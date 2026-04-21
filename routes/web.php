@@ -18,6 +18,17 @@ Route::middleware('guest')->group(function () {
     Route::get('/register', [RegisterController::class, 'create'])->name('register');
     Route::post('/register', [RegisterController::class, 'store']);
 
+    // Verification Routes
+    Route::prefix('auth/verify')->name('auth.verify.')->group(function () {
+        Route::get('/email', [\App\Http\Controllers\Auth\VerifyEmailController::class, 'show'])->name('email');
+        Route::post('/email', [\App\Http\Controllers\Auth\VerifyEmailController::class, 'verify'])->name('email.post');
+        Route::post('/email/resend', [\App\Http\Controllers\Auth\VerifyEmailController::class, 'resend'])->name('email.resend');
+
+        Route::get('/login', [\App\Http\Controllers\Auth\VerifyLoginController::class, 'show'])->name('login');
+        Route::post('/login', [\App\Http\Controllers\Auth\VerifyLoginController::class, 'verify'])->name('login.post');
+        Route::post('/login/resend', [\App\Http\Controllers\Auth\VerifyLoginController::class, 'resend'])->name('login.resend');
+    });
+
     Route::get('/forgot-password', [ForgotPasswordController::class, 'create'])->name('password.request');
     Route::post('/forgot-password', [ForgotPasswordController::class, 'store'])->name('password.email');
 

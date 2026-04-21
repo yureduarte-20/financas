@@ -22,12 +22,17 @@ class RegisterController extends Controller
     /**
      * Handle an incoming registration request.
      */
-    public function store(RegisterRequest $request, RegisterUserAction $action): RedirectResponse
-    {
+    public function store(
+        RegisterRequest $request,
+        RegisterUserAction $action,
+        \App\Actions\Auth\GenerateAuthCodeAction $generateCode
+    ): RedirectResponse {
         $user = $action->execute($request->validated());
 
-        Auth::login($user);
+        $generateCode->execute($user->email, 'registration');
 
-        return redirect()->route('dashboard');
+        session(['auth.email' => $user->email]);
+
+        return redirect()->route('auth.verify.email');
     }
 }
