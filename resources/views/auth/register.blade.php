@@ -8,51 +8,24 @@
         @csrf
 
         <!-- Name -->
-        <x-input
-            id="name"
-            class="block mt-1 w-full"
-            type="text"
-            name="name"
-            :value="old('name')"
-            required
-            autofocus
-            autocomplete="name"
-            label="Nome Completo"
-        />
+        <x-input id="name" class="block mt-1 w-full" type="text" name="name" :value="old('name')" required autofocus
+            autocomplete="name" label="Nome Completo" />
+
+        <!-- CPF -->
+        <x-input x-mask="999.999.999-99" id="cpf" class="block mt-1 w-full" type="text" name="cpf" :value="old('cpf')"
+            required label="CPF" />
 
         <!-- Email Address -->
-        <x-input
-            id="email"
-            class="block mt-1 w-full"
-            type="email"
-            name="email"
-            :value="old('email')"
-            required
-            autocomplete="username"
-            label="E-mail"
-        />
+        <x-input id="email" class="block mt-1 w-full" type="email" name="email" :value="old('email')" required
+            autocomplete="username" label="E-mail" />
 
         <!-- Password -->
-        <x-input
-            id="password"
-            class="block mt-1 w-full"
-            type="password"
-            name="password"
-            required
-            autocomplete="new-password"
-            label="Senha"
-        />
+        <x-input id="password" class="block mt-1 w-full" type="password" name="password" required
+            autocomplete="new-password" label="Senha" />
 
         <!-- Confirm Password -->
-        <x-input
-            id="password_confirmation"
-            class="block mt-1 w-full"
-            type="password"
-            name="password_confirmation"
-            required
-            autocomplete="new-password"
-            label="Confirmar Senha"
-        />
+        <x-input id="password_confirmation" class="block mt-1 w-full" type="password" name="password_confirmation"
+            required autocomplete="new-password" label="Confirmar Senha" />
 
         <div class="mt-6">
             <x-button full-width type="submit">
