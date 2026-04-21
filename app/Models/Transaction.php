@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Enum\TransactionStatusEnum;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -14,13 +15,15 @@ class Transaction extends Model
     protected $fillable = [
         'type',
         'value',
+        'name',
         'description',
         'user_id',
         'document_id',
         'category_id',
         'status',
-        'name',
-        'transaction_description',
+    ];
+    protected $casts = [
+        'status' => TransactionStatusEnum::class,
     ];
 
     public function user(): BelongsTo

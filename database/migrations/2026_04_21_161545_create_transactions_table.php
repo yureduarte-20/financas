@@ -13,13 +13,13 @@ return new class extends Migration {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('type');
-            $table->decimal('value', 15, 2);
+            $table->decimal('value', 8, 2);
+            $table->string('name');
             $table->string('description')->nullable();
-            $table->string('status')->default('pending');
-            $table->string('name')->nullable();
-            $table->string('transaction_description')->nullable();
+            $table->string('status')->default('published');
 
-            $table->foreignId('user_id')->constrained()->onDelete('cascade');
+
+            $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('category_id')->nullable()->constrained()->onDelete('set null');
             $table->foreignUuid('document_id')->nullable()->constrained()->onDelete('set null');
 

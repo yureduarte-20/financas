@@ -1,0 +1,26 @@
+<?php
+
+namespace {{ namespace }};
+
+use App\Actions\AbstractAction;
+
+class {{ class }} extends AbstractAction
+{
+    /**
+     * @return array<string, \Illuminate\Validation\Rule|string>
+     */
+    public function rules(): array
+    {
+        return [
+            //
+        ];
+    }
+
+    /**
+     * Execute the action.
+     */
+    public function execute(array $input): mixed
+    {
+        //
+    }
+}
