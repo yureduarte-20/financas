@@ -11,13 +11,14 @@
 @php
     // Mapeamento de cores para classes CSS
     $colorClasses = [
-        'primary' => 'bg-primary-600 hover:bg-primary-700 focus:bg-primary-700 text-white',
-        'secondary' => 'bg-gray-500 hover:bg-gray-600 focus:bg-gray-600 text-white',
-        'success' => 'bg-teal-500 hover:bg-teal-600 focus:bg-teal-600 text-white',
-        'danger' => 'bg-red-500 hover:bg-red-600 focus:bg-red-600 text-white',
-        'warning' => 'bg-yellow-500 hover:bg-yellow-600 focus:bg-yellow-600 text-white',
-        'light' => 'bg-white hover:bg-gray-200 focus:bg-gray-200 text-gray-800',
-        'dark' => 'bg-gray-800 hover:bg-gray-900 focus:bg-gray-900 text-white dark:bg-white dark:text-neutral-800',
+        'primary' => 'bg-primary hover:bg-primary-hover text-primary-foreground',
+        'secondary' => 'bg-neutral-500 hover:bg-neutral-600 text-white',
+        'accent' => 'bg-accent hover:bg-accent-hover text-accent-foreground',
+        'success' => 'bg-success hover:bg-success-hover text-success-foreground',
+        'danger' => 'bg-danger hover:bg-danger-hover text-danger-foreground',
+        'warning' => 'bg-warning hover:bg-warning-hover text-warning-foreground',
+        'light' => 'bg-white hover:bg-gray-200 text-gray-800',
+        'dark' => 'bg-neutral-800 hover:bg-neutral-900 text-white dark:bg-white dark:text-neutral-800',
     ];
 
     // Mapeamento de tamanhos

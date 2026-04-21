@@ -4,7 +4,7 @@
 ])
 @if($errors->any())
     <div x-init="setTimeout(() => $el.remove(), {{$timeout}})"
-         class="bg-red-50 border border-red-200 text-sm text-red-800 rounded-lg p-4 dark:bg-red-800/10 dark:border-red-900 dark:text-red-500"
+         class="bg-danger-50 border border-danger-200 text-sm text-danger-800 rounded-lg p-4 dark:bg-danger/10 dark:border-danger-900 dark:text-danger-500"
          role="alert" tabindex="-1" aria-labelledby="{{$id}}">
         <div class="flex">
             <div class="shrink-0">
@@ -21,7 +21,7 @@
                 <h3 id="{{$id}}" class="text-sm font-semibold">
                     {{__("Whoops! Something went wrong.")}}
                 </h3>
-                <div class="mt-2 text-sm text-red-700 dark:text-red-400">
+                <div class="mt-2 text-sm text-danger-700 dark:text-danger-400">
                     <ul class="list-disc space-y-1 ps-5">
                         @foreach($errors->all() as $e)
                             <li>{{$e}}</li>

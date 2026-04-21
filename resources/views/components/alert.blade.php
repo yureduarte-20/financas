@@ -8,13 +8,12 @@
 @php
     // Mapeamento de tipos para classes CSS
     $typeClasses = [
-        'dark' => 'bg-gray-800 dark:bg-white dark:text-neutral-800',
-        'secondary' => 'bg-gray-500',
-        'info' => 'bg-blue-600 dark:bg-blue-500',
-        'success' => 'bg-teal-500',
-        'success' => 'bg-teal-500',
-        'danger' => 'bg-red-500',
-        'warning' => 'bg-yellow-500',
+        'dark' => 'bg-neutral-800 dark:bg-white dark:text-neutral-800',
+        'secondary' => 'bg-neutral-500',
+        'info' => 'bg-info',
+        'success' => 'bg-success',
+        'danger' => 'bg-danger',
+        'warning' => 'bg-warning',
         'light' => 'bg-white text-gray-600',
     ];
 

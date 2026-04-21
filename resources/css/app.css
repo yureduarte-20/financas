@@ -1,7 +1,6 @@
 @import 'tailwindcss';
 @import "../../node_modules/preline/variants.css";
 
-
 @source "../../node_modules/preline/dist/*.js";
 @source '../../vendor/laravel/framework/src/Illuminate/Pagination/resources/views/*.blade.php';
 @source '../../storage/framework/views/*.php';
@@ -9,8 +8,107 @@
 @source '../**/*.js';
 
 @theme {
-    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji',
-        'Segoe UI Symbol', 'Noto Color Emoji';
+    --font-sans: 'Instrument Sans', ui-sans-serif, system-ui, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+
+    /* --- Primary (Azul Céu) --- */
+    --color-primary-50: #eaf4fb;
+    --color-primary-100: #c2e1f5;
+    --color-primary-200: #90c9ee;
+    --color-primary-300: #5baee3;
+    --color-primary-400: #2e8fd6;
+    --color-primary-500: #1a75b8;
+    --color-primary-600: #145d96;
+    --color-primary-700: #0e4472;
+    --color-primary-800: #092d4e;
+    --color-primary-900: #04182a;
+    --color-primary-950: #020d18;
+    --color-primary: #1a75b8;
+    --color-primary-hover: #145d96;
+    --color-primary-line: #90c9ee;
+    --color-primary-foreground: #ffffff;
+
+    /* --- Accent (Âmbar) --- */
+    --color-accent-50: #fff4e6;
+    --color-accent-100: #ffddb3;
+    --color-accent-200: #ffbb66;
+    --color-accent-300: #f99f33;
+    --color-accent-400: #f28500;
+    --color-accent-500: #e07a00;
+    --color-accent-600: #b36200;
+    --color-accent-700: #7a4200;
+    --color-accent-800: #4d2900;
+    --color-accent-900: #261400;
+    --color-accent-950: #130a00;
+    --color-accent: #e07a00;
+    --color-accent-hover: #b36200;
+    --color-accent-foreground: #ffffff;
+
+    /* --- Success (Teal) --- */
+    --color-success-50: #f0faf4;
+    --color-success-100: #d1f0dd;
+    --color-success-200: #a3e1bc;
+    --color-success-300: #6fce97;
+    --color-success-400: #3dba73;
+    --color-success-500: #1fa057;
+    --color-success-600: #157a42;
+    --color-success-700: #0f5c31;
+    --color-success-800: #0a3d21;
+    --color-success-900: #051f10;
+    --color-success: #1fa057;
+    --color-success-hover: #157a42;
+    --color-success-foreground: #ffffff;
+
+    /* --- Danger (Vermelho) --- */
+    --color-danger-50: #fff1f2;
+    --color-danger-100: #ffdde0;
+    --color-danger-200: #ffbcc1;
+    --color-danger-300: #ff8d95;
+    --color-danger-400: #ff545f;
+    --color-danger-500: #f52535;
+    --color-danger-600: #d11525;
+    --color-danger-700: #a30f1b;
+    --color-danger-800: #7a0b14;
+    --color-danger-900: #50070d;
+    --color-danger: #f52535;
+    --color-danger-hover: #d11525;
+    --color-danger-foreground: #ffffff;
+
+    /* --- Warning (Âmbar Atenção) --- */
+    --color-warning-50: #fffbeb;
+    --color-warning-100: #fef3c7;
+    --color-warning-200: #fde68a;
+    --color-warning-300: #fcd34d;
+    --color-warning-400: #fbbf24;
+    --color-warning-500: #f59e0b;
+    --color-warning-600: #d97706;
+    --color-warning-700: #b45309;
+    --color-warning-800: #92400e;
+    --color-warning-900: #78350f;
+    --color-warning: #f59e0b;
+    --color-warning-hover: #d97706;
+    --color-warning-foreground: #000000;
+
+    /* --- Info (Azul-Céu) --- */
+    --color-info-50: #eaf4fb;
+    --color-info-100: #c2e1f5;
+    --color-info-200: #90c9ee;
+    --color-info-300: #5baee3;
+    --color-info-400: #2e8fd6;
+    --color-info-500: #1a75b8;
+    --color-info-600: #145d96;
+    --color-info-700: #0e4472;
+    --color-info-800: #092d4e;
+    --color-info-900: #04182a;
+    --color-info: #1a75b8;
+    --color-info-hover: #145d96;
+    --color-info-foreground: #ffffff;
+
+    /* --- Surface (Neutros) --- */
+    --color-surface-50: #f8fafc;
+    --color-surface-100: #f1f5f9;
+    --color-surface-200: #e2e8f0;
+    --color-surface-300: #cbd5e1;
+    --color-surface: #f1f5f9;
 }
 
 @layer base {

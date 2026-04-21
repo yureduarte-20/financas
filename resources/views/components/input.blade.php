@@ -16,8 +16,8 @@
     $inputClasses = 'py-2.5 sm:py-3 px-4 block w-full rounded-lg sm:text-sm dark:bg-neutral-800 dark:text-neutral-400';
     // Adiciona classes de borda com base na validação
     $inputClasses .= $hasError
-        ? ' border-red-500 focus:border-red-500 focus:ring-red-500'
-        : ' border-gray-200 focus:border-blue-500 focus:ring-blue-500 dark:border-neutral-700';
+        ? ' border-danger focus:border-danger focus:ring-danger'
+        : ' border-neutral-200 focus:border-primary focus:ring-primary dark:border-neutral-700';
     // Adiciona classes para estado disabled/readonly
     $inputClasses .= $disabled || $readonly ? ' bg-gray-100 dark:bg-neutral-700' : '';
 @endphp
@@ -43,7 +43,7 @@
         >
         @if($hasError)
             <div class="absolute inset-y-0 end-0 flex items-center pointer-events-none pe-3">
-                <svg class="shrink-0 size-4 text-red-500" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                <svg class="shrink-0 size-4 text-danger" xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
                     <circle cx="12" cy="12" r="10"></circle>
                     <line x1="12" x2="12" y1="8" y2="12"></line>
                     <line x1="12" x2="12.01" y1="16" y2="16"></line>
@@ -57,7 +57,7 @@
         @endif
     </div>
     @error($name)
-        <p class="text-xs text-red-600 mt-2" id="{{ $name }}-error">
+        <p class="text-xs text-danger mt-2" id="{{ $name }}-error">
             {{ $message }}
         </p>
     @enderror
