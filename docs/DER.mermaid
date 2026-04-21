@@ -1,0 +1,62 @@
+erDiagram
+    user {
+        int id PK
+        string name
+        string email
+        string cpf
+        string password
+    }
+
+    documents {
+        string id PK
+        string name
+        string sha1
+        int size
+        int user_id FK
+    }
+
+    ai_prompts {
+        int id PK
+        string response
+        string prompt
+        int promptable_id
+        string promptable_type
+    }
+
+    transactions {
+        int id PK
+        string type
+        float value
+        string description
+        int user_id FK
+        int document_id FK
+        int category_id FK
+        string status
+        string name
+        string transaction_description
+    }
+
+    category {
+        string id PK
+        string name
+        string description
+        int user_id FK
+    }
+
+    recurrent_transaction {
+        string id PK
+        string name
+        string description
+        int category_id FK
+        float value
+        int user_id FK
+    }
+
+    %% Relacionamentos extraídos das conexões do XML
+    user ||--o{ documents : "possui"
+    user ||--o{ transactions : "realiza"
+    user ||--o{ category : "gerencia"
+    user ||--o{ recurrent_transaction : "agenda"
+    documents ||--o{ ai_prompts : "gera"
+    documents ||--o{ transactions : "anexa"
+    category ||--o{ transactions : "classifica"
