@@ -5,6 +5,8 @@ use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\RegisterController;
 use App\Http\Controllers\Auth\ResetPasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\CategoryController;
+use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -38,7 +40,8 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
-    Route::get('/profile', fn() => view('dashboard'))->name('profile');
+    Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
     Route::get('/style-guide', fn() => view('style-guide'))->name('style-guide');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 });
