@@ -62,6 +62,9 @@ document.addEventListener('livewire:init', () => {
     Livewire.on('component::show-toast', ({ message, type }) => {
         window.dispatchEvent(new CustomEvent('show-toast', { detail: { message, type, duration: 5000, position: 'right' } }));
     })
+    Livewire.on('notify', ({ message, type }) => {
+        window.dispatchEvent(new CustomEvent('show-toast', { detail: { message, type, duration: 5000, position: 'right' } }));
+    })
 }, { once: true })
 
 function initPreline() {

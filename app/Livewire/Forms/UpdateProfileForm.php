@@ -5,7 +5,6 @@ namespace App\Livewire\Forms;
 class UpdateProfileForm extends AbstractActionForm
 {
     public string $name = '';
-    public string $email = '';
 
     public function getAction(): \App\Actions\AbstractAction
     {

@@ -15,7 +15,7 @@
 
         <form wire:submit="updateProfile" class="space-y-4 mt-4">
             <x-input label="Nome" wire:model="profileForm.name" maxlength="255" required />
-            <x-input label="E-mail" type="email" wire:model="profileForm.email" maxlength="255" required />
+            <x-input disabled label="E-mail" type="email" value="{{ Auth::user()->email }}" maxlength="255" required />
 
             <x-button type="submit" color="primary">
                 Salvar perfil

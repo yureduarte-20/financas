@@ -28,14 +28,13 @@ class ManageProfile extends Component
         $user = $this->profileForm->submit();
 
         $this->dispatch('profile-updated', name: $user->name);
-        session()->flash('profile_success', 'Perfil atualizado com sucesso.');
+        $this->dispatch('notify', type: 'success', title: 'Sucesso', message: 'Perfil atualizado com sucesso.');
     }
 
     public function updatePassword(): void
     {
         $this->passwordForm->submit();
         $this->passwordForm->reset();
-
-        session()->flash('password_success', 'Senha alterada com sucesso.');
+        $this->dispatch('notify', type: 'success', title: 'Sucesso', message: 'Senha alterada com sucesso.');
     }
 }

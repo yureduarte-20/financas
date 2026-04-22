@@ -317,7 +317,18 @@
         <!-- Page Content -->
         <main class="flex-1 overflow-y-auto bg-surface-50 dark:bg-dark-bg">
             <div class="max-w-8xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                {{ $slot }}
+                    @if(session('success'))
+                    <x-alert type="success" title="Sucesso">
+                        {{ session('success') }}
+                    </x-alert>
+                    @endif
+                    @if(session('error'))
+                    <x-alert type="danger" title="Erro">
+                        {{ session('error') }}
+                    </x-alert>
+                    @endif
+                    {{ $slot }}
+                
             </div>
         </main>
     </div>
