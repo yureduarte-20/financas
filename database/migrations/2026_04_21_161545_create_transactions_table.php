@@ -20,7 +20,7 @@ return new class extends Migration {
 
 
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
-            $table->foreignUuid('category_id')->nullable()->constrained()->onDelete('set null');
+            $table->foreignUuid('category_id')->constrained()->onDelete('set null');
             $table->foreignUuid('document_id')->nullable()->constrained()->onDelete('set null');
 
             $table->timestamps();

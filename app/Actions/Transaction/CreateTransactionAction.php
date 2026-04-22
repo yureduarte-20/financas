@@ -20,7 +20,7 @@ class CreateTransactionAction extends AbstractAction
             'value' => 'required|numeric|min:0',
             'description' => 'required|string|max:255',
             'document_id' => 'nullable|exists:documents,id',
-            'category_id' => 'nullable|exists:categories,id',
+            'category_id' => 'required|exists:categories,id',
             'status' => 'required|in:published,review',
             'name' => 'required|string|max:255',
         ];

@@ -9,7 +9,7 @@ use Gate;
 class UpdateCategoryAction extends AbstractAction
 {
     public function __construct(
-        private Category $category
+        
     ) {
     }
     /**

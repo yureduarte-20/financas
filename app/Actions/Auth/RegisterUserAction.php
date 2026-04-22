@@ -18,7 +18,9 @@ class RegisterUserAction
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
         ]);
-
+        $user->categories()->create([
+            'name' => 'Outros'
+        ]);
         event(new Registered($user));
 
         return $user;
