@@ -23,9 +23,7 @@
 
                 <x-input
                     label="Valor"
-                    type="number"
-                    step="0.01"
-                    min="0.01"
+                    x-mask:dynamic="$money($input, ',', '')"
                     wire:model="createForm.value"
                     required
                 />

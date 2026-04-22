@@ -57,6 +57,8 @@ class ManageExpenses extends Component
 
     public function createExpense(): void
     {
+        $old = $this->createForm->value;
+        $this->createForm->value = str_replace(',', '.', $old);
         $this->createForm->submit();
         $this->createForm->reset();
         $this->createForm->expense_date = now()->toDateString();
@@ -90,10 +92,16 @@ class ManageExpenses extends Component
 
     public function updateExpense(): void
     {
-        $this->updateForm->submit();
-        $this->cancelEditing();
-
-        $this->dispatch('notify', type: 'success', title: 'Sucesso', message: 'Despesa atualizada com sucesso.');
+        $old = $this->updateForm->value;
+        try{
+            $this->updateForm->value = str_replace(',', '.', $old);
+            $this->updateForm->submit();
+            $this->cancelEditing();
+            $this->dispatch('notify', type: 'success', title: 'Sucesso', message: 'Despesa atualizada com sucesso.');
+        }catch(\Exception $e){
+            $this->updateForm->value = str_replace('.', ',', $old);
+            $this->dispatch('notify', type: 'error', title: 'Erro', message: 'Erro ao atualizar despesa: ');
+        }
     }
 
     public function deleteExpense(string $id): void
