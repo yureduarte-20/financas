@@ -61,7 +61,7 @@ class ManageExpenses extends Component
         $this->createForm->reset();
         $this->createForm->expense_date = now()->toDateString();
 
-        session()->flash('success', 'Despesa criada com sucesso.');
+        $this->dispatch('notify', type: 'success', title: 'Sucesso', message: 'Despesa criada com sucesso.');
         $this->resetPage();
     }
 
@@ -93,7 +93,7 @@ class ManageExpenses extends Component
         $this->updateForm->submit();
         $this->cancelEditing();
 
-        session()->flash('success', 'Despesa atualizada com sucesso.');
+        $this->dispatch('notify', type: 'success', title: 'Sucesso', message: 'Despesa atualizada com sucesso.');
     }
 
     public function deleteExpense(string $id): void
@@ -105,8 +105,7 @@ class ManageExpenses extends Component
         if ($this->updateForm->id === $id) {
             $this->cancelEditing();
         }
-
-        session()->flash('success', 'Despesa removida com sucesso.');
+        $this->dispatch('notify', type: 'success', title: 'Sucesso', message: 'Despesa removida com sucesso.');
         $this->resetPage();
     }
 
