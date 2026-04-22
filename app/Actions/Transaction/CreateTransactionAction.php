@@ -7,6 +7,7 @@ use App\Enum\TransactionStatusEnum;
 use App\Models\Transaction;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Validation\Rule;
 
 class CreateTransactionAction extends AbstractAction
 {
@@ -16,12 +17,15 @@ class CreateTransactionAction extends AbstractAction
     public function rules(): array
     {
         return [
-            'type' => 'required|in:in,out',
-            'value' => 'required|numeric|min:0',
-            'description' => 'required|string|max:255',
-            'document_id' => 'nullable|exists:documents,id',
-            'category_id' => 'required|exists:categories,id',
-            'status' => 'required|in:published,review',
+            'value' => 'required|numeric|min:0.01',
+            'description' => 'nullable|string|max:255',
+            'expense_date' => 'required|date',
+            'document_id' => 'nullable|uuid|exists:documents,id',
+            'category_id' => [
+                'required',
+                'uuid',
+                Rule::exists('categories', 'id')->where('user_id', Auth::id()),
+            ],
             'name' => 'required|string|max:255',
         ];
     }
@@ -32,9 +36,14 @@ class CreateTransactionAction extends AbstractAction
     public function execute(array $input): mixed
     {
         $validated = $this->validate($input);
-        $validated['user_id'] = Auth::user()->id;
-        $validated['status'] = TransactionStatusEnum::PUBLISHED;
+
         Gate::authorize('create', Transaction::class);
-        return Transaction::create($validated);
+
+        return Transaction::create([
+            ...$validated,
+            'type' => 'out',
+            'status' => TransactionStatusEnum::PUBLISHED,
+            'user_id' => Auth::id(),
+        ]);
     }
 }

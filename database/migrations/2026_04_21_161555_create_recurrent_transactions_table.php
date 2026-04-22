@@ -14,7 +14,7 @@ return new class extends Migration {
             $table->uuid('id')->primary();
             $table->string('name');
             $table->string('description')->nullable();
-            $table->decimal('value', 8, 2);
+            $table->decimal('value', 10, 2);
 
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');
             $table->foreignUuid('category_id')->nullable()->constrained()->onDelete('set null');

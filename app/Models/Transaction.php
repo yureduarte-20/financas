@@ -17,6 +17,7 @@ class Transaction extends Model
         'value',
         'name',
         'description',
+        'expense_date',
         'user_id',
         'document_id',
         'category_id',
@@ -24,6 +25,7 @@ class Transaction extends Model
     ];
     protected $casts = [
         'status' => TransactionStatusEnum::class,
+        'expense_date' => 'date',
     ];
 
     public function user(): BelongsTo
