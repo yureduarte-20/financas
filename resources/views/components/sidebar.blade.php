@@ -83,7 +83,17 @@
                     {{ __('Dashboard') }}
                 </a>
 
-
+                <a href="{{ route('documents.import') }}" wire:navigate @class([
+                    'flex items-center px-3 py-2 text-sm font-medium rounded-md border-l-4 transition-colors duration-200',
+                    'bg-primary-50 border-primary-500 text-primary-700 dark:bg-primary-950/50 dark:border-primary-400 dark:text-primary-300' => request()->routeIs('documents.import'),
+                    'text-gray-700 hover:bg-gray-50 hover:text-gray-900 border-transparent dark:text-dark-muted dark:hover:bg-dark-surface-hover/50 dark:hover:text-neutral-100' => !request()->routeIs('documents.import'),
+                ])>
+                    <svg class="mr-3 h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                            d="M7 16a4 4 0 01-.88-7.903A5 5 0 1115.9 6L16 6a5 5 0 011 9.9M15 13l-3-3m0 0l-3 3m3-3v12" />
+                    </svg>
+                    Importar documento
+                </a>
 
                 <!-- Categories Link -->
                 <a href="{{ route('categories.index') }}" wire:navigate @class([

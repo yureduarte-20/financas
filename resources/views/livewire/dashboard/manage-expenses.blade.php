@@ -2,55 +2,80 @@
     <x-errors class="mb-4" />
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <div class="bg-white dark:bg-dark-surface border border-surface-200 dark:border-dark-border rounded-lg p-4">
-            <h2 class="text-lg font-semibold mb-4 dark:text-dark-text">
-                Nova despesa
-            </h2>
-
-            <form wire:submit="createExpense" class="space-y-4">
-                <x-input
-                    label="Nome"
-                    wire:model="createForm.name"
-                    required
-                    maxlength="255"
-                />
-
-                <x-input
-                    label="Descricao"
-                    wire:model="createForm.description"
-                    maxlength="255"
-                />
-
-                <x-input
-                    label="Valor"
-                    x-mask:dynamic="$money($input, ',', '')"
-                    wire:model="createForm.value"
-                    required
-                />
-
-                <x-input
-                    label="Data da despesa"
-                    type="date"
-                    wire:model="createForm.expense_date"
-                    required
-                />
-
-                <x-select.native
-                    label="Categoria"
-                    wire:model="createForm.category_id"
-                    required
-                >
-                    <option value="">Selecione</option>
-                    @foreach ($categories as $category)
-                        <option value="{{ $category->id }}">{{ $category->name }}</option>
-                    @endforeach
-                </x-select.native>
-
+        <x-tabs :items="[
+            [
+                'id' => 'manual',
+                'label' => 'Nova despesa',
+            ],
+            [
+                'id' => 'automatic',
+                'label' => 'Através de IA',
+            ],
+        ]" >
+        <x-slot:panel_manual>
+            <div class="bg-white dark:bg-dark-surface border border-surface-200 dark:border-dark-border rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4 dark:text-dark-text">
+                    Nova despesa
+                </h2>
+    
+                <form wire:submit="createExpense" class="space-y-4">
+                    <x-input
+                        label="Nome"
+                        wire:model="createForm.name"
+                        required
+                        maxlength="255"
+                    />
+    
+                    <x-input
+                        label="Descricao"
+                        wire:model="createForm.description"
+                        maxlength="255"
+                    />
+    
+                    <x-input
+                        label="Valor"
+                        x-mask:dynamic="$money($input, ',', '')"
+                        wire:model="createForm.value"
+                        required
+                    />
+    
+                    <x-input
+                        label="Data da despesa"
+                        type="date"
+                        wire:model="createForm.expense_date"
+                        required
+                    />
+    
+                    <x-select.native
+                        label="Categoria"
+                        wire:model="createForm.category_id"
+                        required
+                    >
+                        <option value="">Selecione</option>
+                        @foreach ($categories as $category)
+                            <option value="{{ $category->id }}">{{ $category->name }}</option>
+                        @endforeach
+                    </x-select.native>
+    
+                    <x-button type="submit" color="primary">
+                        Criar despesa
+                    </x-button>
+                </form>
+            </div>
+        </x-slot:panel_manual>
+        <x-slot:panel_automatic>
+            <div class="bg-white dark:bg-dark-surface border border-surface-200 dark:border-dark-border rounded-lg p-4">
+                <h2 class="text-lg font-semibold mb-4 dark:text-dark-text">
+                    Nova despesa
+                </h2>
+                <x-input label="Arquivo para análise" type="file" wire:model="automaticForm.file" required />
                 <x-button type="submit" color="primary">
-                    Criar despesa
+                    Analisar despesa através de IA
                 </x-button>
-            </form>
-        </div>
+            </div>
+        </x-slot:panel_automatic>
+        </x-tabs>
+        
 
         <div class="bg-white dark:bg-dark-surface border border-surface-200 dark:border-dark-border rounded-lg p-4">
             <h2 class="text-lg font-semibold mb-4 dark:text-dark-text">
