@@ -47,6 +47,7 @@ Route::middleware('auth')->group(function () {
     Route::get('/documents/{document}/file', [DocumentFileController::class, 'show'])->name('documents.file');
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/style-guide', fn () => view('style-guide'))->name('style-guide');
+    Route::get('/style-guide', fn() => view('style-guide'))->name('style-guide');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 });
+Route::post('/{token}/webhook', [\App\Http\Controllers\TelegramWebhookController::class, 'handle']);
