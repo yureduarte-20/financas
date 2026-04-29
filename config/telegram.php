@@ -49,6 +49,7 @@ return [
                 App\Telegram\Commands\AddExpenseCommand::class,
                 App\Telegram\Commands\InvoiceCommand::class,
                 App\Telegram\Commands\AddIncomeCommand::class,
+                App\Telegram\Commands\CreateAccountCommand::class
             ],
         ],
 

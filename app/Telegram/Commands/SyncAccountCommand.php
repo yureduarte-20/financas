@@ -45,7 +45,7 @@ class SyncAccountCommand extends Command
             'expires_at' => now()->addMinutes(10),
         ]);
         Cache::put('telegram_code_for_' . $chat_id, $authCode->id, now()->addMinutes(10));
-        $user->notifyNow(new TelegramSyncAuthCodeNotification($authCodeStr));
+        $user->notify(new TelegramSyncAuthCodeNotification($authCodeStr));
 
         return $this->replyWithMessage([
             'text' => "Enviamos um código de verificação para o email {$email}. Por favor, verifique sua caixa de entrada e responda com o comando:\n\n/sync SEU_CODIGO"
