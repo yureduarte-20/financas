@@ -43,7 +43,8 @@ return [
                 App\Telegram\Commands\StartCommand::class,
                 App\Telegram\Commands\SyncAccountCommand::class,
                 App\Telegram\Commands\VerifyCodeCommand::class,
-                App\Telegram\Commands\HelpCommand::class
+                App\Telegram\Commands\HelpCommand::class,
+                App\Telegram\Commands\TotalExpensesCommand::class
             ],
         ],
 
