@@ -12,12 +12,12 @@ return new class extends Migration {
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('type');
-            $table->decimal('value', 10, 2);
-            $table->string('name');
-            $table->string('description')->nullable();
-            $table->string('status')->default('published');
-            $table->date('expense_date');
+            $table->string('type')->comment('out, income');
+            $table->decimal('value', 10, 2)->comment('valor');
+            $table->string('name')->comment('descrição curta');
+            $table->string('description')->nullable()->comment('descrição');
+            $table->string('status')->default('published')->comment('status');
+            $table->date('expense_date')->comment('data');
 
 
             $table->foreignUuid('user_id')->constrained()->onDelete('cascade');

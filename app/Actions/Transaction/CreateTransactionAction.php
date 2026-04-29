@@ -21,6 +21,7 @@ class CreateTransactionAction extends AbstractAction
             'description' => 'nullable|string|max:255',
             'expense_date' => 'required|date',
             'document_id' => 'nullable|uuid|exists:documents,id',
+            'type' => 'required|in:out,income',
             'category_id' => [
                 'required',
                 'uuid',
@@ -41,9 +42,8 @@ class CreateTransactionAction extends AbstractAction
 
         return Transaction::create([
             ...$validated,
-            'type' => 'out',
             'status' => TransactionStatusEnum::PUBLISHED,
-            'user_id' => Auth::id(),
+            'user_id' => Auth::user()->id,
         ]);
     }
 }

@@ -5,6 +5,8 @@ use Livewire\Attributes\Locked;
 
 class CreateExpenseTransactionForm extends AbstractActionForm
 {
+    #[Locked]
+    public string $type = 'out';
     public string $name = '';
     public ?string $description = null;
     public string $value = '';

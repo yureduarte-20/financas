@@ -6,32 +6,36 @@ use App\Actions\Transaction\CreateTransactionAction;
 use App\Models\Category;
 use App\Models\Transaction;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Log;
+use Illuminate\Validation\ValidationException;
+use Log;
+use Telegram\Bot\Commands\Command;
 
-class AddExpenseCommand extends LoggedInCommand
+class AddIncomeCommand extends LoggedInCommand
 {
-    protected string $name = 'add_expense';
-    protected array $aliases = ['gasto'];
-    protected string $description = 'Registrar gasto: /gasto {valor} {"descrição"} {"categoria"} {data}';
+
+    protected string $name = 'add_income';
+    protected array $aliases = ['receita'];
+    protected string $description = 'Registrar receita: /receita {valor} {"descrição"} {"categoria"} {data}';
 
     // O pulo do gato está aqui! Ensinamos o regex a aceitar aspas ou palavras soltas.
     protected string $pattern = '{valor:\S+} {description:"[^"]+"|\S+} {category:"[^"]+"|\S+} {data:\S+}';
 
     public function executeWithUserLoggedIn()
     {
+        $user = $this->getUser();
         $rawValor = $this->argument('valor');
 
         if (!$rawValor) {
-            return $this->replyWithMessage(['text' => '⚠️ Informe ao menos o valor. Ex: /gasto 15,50']);
+            return $this->replyWithMessage(['text' => '⚠️ Informe ao menos o valor. Ex: /receita 15,50']);
         }
 
-        Log::info('AddExpenseCommand - Argumentos Recebidos', $this->arguments);
+        Log::info('AddIncome Command - Argumentos Recebidos', $this->arguments);
 
         // 1. Sanitize e Validação do Valor
-        $valor = str_replace(['R$', ' '], '', $rawValor);
-        $valor = str_replace(',', '.', $valor);
+        $amount = str_replace(['R$', ' '], '', $rawValor);
+        $amount = str_replace(',', '.', $amount);
 
-        if (!is_numeric($valor)) {
+        if (!is_numeric($amount)) {
             return $this->replyWithMessage(['text' => '❌ Valor inválido. Use o formato: 100,00']);
         }
 
@@ -41,26 +45,31 @@ class AddExpenseCommand extends LoggedInCommand
 
         // 3. Tratamento de Categoria (Removemos as aspas)
         $rawCategory = $this->argument('category', 'Outros');
-        $categoryName = $rawCategory ? trim($rawCategory, '"\'') : null;
+        $categoryName = trim($rawCategory, '"\'');
         $categoryId = $this->findCategoryByName($categoryName)->id;
 
         // 4. Tratamento de Data
         $dataRaw = $this->argument('data');
         $dataParsed = $this->parseDate($dataRaw);
-        $expenseDate = $dataParsed ?: now()->format('Y-m-d');
-
-        // 5. Execução
-        app()->make(CreateTransactionAction::class)->execute([
-            'category_id' => $categoryId,
-            'type' => 'out',
-            'value' => $valor,
-            'name' => "Despesa adicionada no telegram de R$ {$valor}",
-            'description' => $description,
-            'expense_date' => $expenseDate
-        ]);
+        $incomeDate = $dataParsed ?: now()->format('Y-m-d');
+        $action = app()->make(CreateTransactionAction::class);
+        try {
+            // 5. Execução
+            $action->execute([
+                'category_id' => $categoryId,
+                'type' => 'income',
+                'value' => $amount,
+                'name' => "Receita adicionada no telegram de R$ {$amount}",
+                'description' => $description,
+                'expense_date' => $incomeDate
+            ]);
+        } catch (ValidationException $ex) {
+            Log::warning('validation errors', $ex->errors());
+            throw $ex;
+        }
 
         return $this->replyWithMessage([
-            'text' => '✅ Despesa de R$ ' . number_format((float) $valor, 2, ',', '.') . ' salva com sucesso!'
+            'text' => '✅ Receita de R$ ' . number_format((float) $amount, 2, ',', '.') . ' salva com sucesso!'
         ]);
     }
 
