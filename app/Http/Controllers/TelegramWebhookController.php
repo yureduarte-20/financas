@@ -8,8 +8,12 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 
 class TelegramWebhookController extends Controller
 {
-    public function handle()
+    public function handle($token, Request $request)
     {
+
+        if (!$token || (config('telegram.bots.mybot.webhook_token') != $token)) {
+            return response()->json([], 403);
+        }
 
 
         // Se você quiser usar a lógica de comandos manualmente:
