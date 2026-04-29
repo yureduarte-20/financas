@@ -16,10 +16,20 @@ class HelpCommand extends Command
 
         $commands = $this->getTelegram()->getCommands();
 
-        $response = '';
+        // Cabeçalho com Emoji e Negrito
+        $response = "<b>🤖 Comandos Disponíveis</b>" . PHP_EOL . PHP_EOL;
+        $response .= "Aqui está a lista do que eu posso fazer por você:" . PHP_EOL . PHP_EOL;
+
         foreach ($commands as $name => $command) {
-            $response .= sprintf('/%s - %s' . PHP_EOL, $name, $command->getDescription());
+            // Formatação: /comando - Descrição com o comando em negrito
+            $response .= sprintf("🔹 /%s - <i>%s</i>" . PHP_EOL, $name, $command->getDescription());
         }
-        $this->replyWithMessage(['text' => $response]);
+
+        $response .= PHP_EOL . "📌 <i>Dica: Digite o comando para iniciar.</i>";
+
+        $this->replyWithMessage([
+            'text' => $response,
+            'parse_mode' => 'HTML' // Fundamental para o Telegram interpretar as tags
+        ]);
     }
 }
