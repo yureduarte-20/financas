@@ -83,15 +83,15 @@
         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
             <x-input label="Buscar" wire:model.live.debounce.300ms="search" placeholder="Nome ou descricao" />
 
-            <x-select.native label="Categoria" wire:model.live="categoryFilter">
+            <x-select.native label="Categoria"  wire:model.blur.live="categoryFilter">
                 <option value="">Todas</option>
                 @foreach ($categories as $category)
                     <option value="{{ $category->id }}">{{ $category->name }}</option>
                 @endforeach
             </x-select.native>
 
-            <x-input label="De" type="date" wire:model.live="dateFrom" />
-            <x-input label="Ate" type="date" wire:model.live="dateTo" />
+            <x-input label="De" type="date"  wire:model.blur.live="dateFrom" />
+            <x-input label="Ate" type="date"  wire:model.blur.live="dateTo" />
         </div>
     </div>
 

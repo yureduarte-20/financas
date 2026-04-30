@@ -8,8 +8,8 @@
         </div>
 
         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <x-input label="De" type="date" wire:model.live="dateFrom" />
-            <x-input label="Até" type="date" wire:model.live="dateTo" />
+            <x-input label="De" type="date"  wire:model.blur.live="dateFrom" />
+            <x-input label="Até" type="date"  wire:model.blur.live="dateTo" />
         </div>
     </div>
 
