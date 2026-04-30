@@ -47,7 +47,7 @@ services:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
     volumes:
-      - /home/data/financas-pessoal:/var/lib/postgresql/data
+      - financas-pessoal-data:/var/lib/postgresql/data
     networks:
       - financas-pessoal
   queue:
@@ -75,3 +75,5 @@ services:
 networks:
   financas-pessoal:
     driver: bridge
+volumes:
+  financas-pessoal-data:
