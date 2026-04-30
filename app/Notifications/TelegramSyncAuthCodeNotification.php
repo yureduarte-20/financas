@@ -29,7 +29,7 @@ class TelegramSyncAuthCodeNotification extends Notification implements ShouldQue
             ->line('Você solicitou a sincronização da sua conta com o Telegram.')
             ->line('Utilize o código de 6 dígitos abaixo no seu aplicativo do Telegram:')
             ->line($this->code)
-            ->line('Envie o comando `/sync ' . $notifiable->email . ' ' . $this->code . '` no bot do Telegram.')
+            ->line('Envie o comando `/verify_code ' . $notifiable->email . '` no bot do Telegram.')
             ->line('Este código expira em 10 minutos.')
             ->line('Se você não solicitou este código, ignore este e-mail.');
     }

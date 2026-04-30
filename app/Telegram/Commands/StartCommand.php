@@ -25,7 +25,9 @@ class StartCommand extends Command
         $text = "<b>Bem-vindo ao Finanças!</b>\n\n" .
             "Para começar, você precisa ter uma conta em:" .
             "🌐 <a href='https://financas.yure.tec.br'>financas.yure.tec.br</a>\n\n" .
-            "<i>Já possui cadastro?</i> Use o comando /sync para conectar sua conta.";
+            "<i>Já possui cadastro?</i> Use o comando /sync para conectar sua conta.\n".
+            "Utilize o comando /help para mais informações"
+            ;
 
         $this->replyWithMessage([
             'text' => $text,

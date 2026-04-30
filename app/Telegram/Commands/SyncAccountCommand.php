@@ -48,7 +48,7 @@ class SyncAccountCommand extends Command
         $user->notify(new TelegramSyncAuthCodeNotification($authCodeStr));
 
         return $this->replyWithMessage([
-            'text' => "Enviamos um código de verificação para o email {$email}. Por favor, verifique sua caixa de entrada e responda com o comando:\n\n/sync SEU_CODIGO"
+            'text' => "Enviamos um código de verificação para o email {$email}. Por favor, verifique sua caixa de entrada e responda com o comando:\n\n/verify_code SEU_CODIGO"
         ]);
     }
 }
