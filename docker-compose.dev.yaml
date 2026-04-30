@@ -1,0 +1,77 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: ${USER}
+        uid: 1000
+      context: ./
+      dockerfile: ./docker-compose/app/Dockerfile
+    image: financas-pessoal
+    container_name: financas-pessoal-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+      # - ./docker-compose/php/ini/php.ini:/usr/local/etc/php/php.ini
+    environment:
+      - TZ=America/Santarem
+      - DOCKER_BUILDKIT=0
+    networks:
+      - financas-pessoal
+
+
+  nginx:
+    image: nginx:alpine
+    container_name: financas-pessoal-nginx
+    restart: unless-stopped
+    expose:
+      - 80
+    ports:
+      - "8081:80"
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    environment:
+      - TZ=America/Santarem
+    networks:
+      - financas-pessoal
+  db:
+    image: postgres:16-alpine
+    expose:
+      - 5432
+    container_name: financas-pessoal-db
+    restart: unless-stopped
+    environment:
+      POSTGRES_DB: ${DB_DATABASE}
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - /home/data/financas-pessoal:/var/lib/postgresql/data
+    networks:
+      - financas-pessoal
+  queue:
+    image: financas-pessoal # Reutiliza a imagem construída pelo serviço 'app'
+    container_name: financas-pessoal-queue
+    restart: unless-stopped
+    working_dir: /var/www/
+    command: php artisan queue:work --verbose --tries=3 --timeout=90
+    volumes:
+      - ./:/var/www
+    environment:
+      - TZ=America/Santarem
+    depends_on:
+      - app
+    networks:
+      - financas-pessoal
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 512M
+        reservations:
+          memory: 128M
+
+networks:
+  financas-pessoal:
+    driver: bridge
