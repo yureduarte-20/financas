@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
-class CreateTransactionAction extends AbstractAction
+class CreateExpenseTransactionAction extends AbstractAction
 {
     /**
      * @return array<string, \Illuminate\Validation\Rule|string>
@@ -21,7 +21,6 @@ class CreateTransactionAction extends AbstractAction
             'description' => 'nullable|string|max:255',
             'expense_date' => 'required|date',
             'document_id' => 'nullable|uuid|exists:documents,id',
-            'type' => 'required|in:out,income',
             'category_id' => [
                 'required',
                 'uuid',
@@ -37,7 +36,7 @@ class CreateTransactionAction extends AbstractAction
     public function execute(array $input): mixed
     {
         $validated = $this->validate($input);
-
+        $validated['type'] = 'out';
         Gate::authorize('create', Transaction::class);
 
         return Transaction::create([

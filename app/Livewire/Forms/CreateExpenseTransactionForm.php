@@ -5,8 +5,6 @@ use Livewire\Attributes\Locked;
 
 class CreateExpenseTransactionForm extends AbstractActionForm
 {
-    #[Locked]
-    public string $type = 'out';
     public string $name = '';
     public ?string $description = null;
     public string $value = '';
@@ -17,6 +15,6 @@ class CreateExpenseTransactionForm extends AbstractActionForm
 
     public function getAction(): \App\Actions\AbstractAction
     {
-        return app()->make(\App\Actions\Transaction\CreateTransactionAction::class);
+        return app()->make(\App\Actions\Transaction\CreateExpenseTransactionAction::class);
     }
 }

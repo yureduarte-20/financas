@@ -2,7 +2,7 @@
 
 namespace App\Telegram\Commands;
 
-use App\Actions\Transaction\CreateTransactionAction;
+use App\Actions\Transaction\CreateExpenseTransactionAction;
 use App\Models\Category;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -50,7 +50,7 @@ class AddExpenseCommand extends LoggedInCommand
         $expenseDate = $dataParsed ?: now()->format('Y-m-d');
 
         // 5. Execução
-        app()->make(CreateTransactionAction::class)->execute([
+        app()->make(CreateExpenseTransactionAction::class)->execute([
             'category_id' => $categoryId,
             'type' => 'out',
             'value' => $valor,
