@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Dashboard;
 
-use App\Actions\Transaction\CreateTransactionAction;
+use App\Actions\Transaction\CreateExpenseTransactionAction;
 use App\Models\Category;
 use App\Models\Document;
 use App\Service\AiService;
@@ -96,7 +96,7 @@ class ImportDocument extends Component
         }
     }
 
-    public function confirmImport(CreateTransactionAction $createTransaction): void
+    public function confirmImport(CreateExpenseTransactionAction $createTransaction): void
     {
         if (! $this->documentId) {
             $this->dispatch('notify', type: 'warning', title: 'Atenção', message: 'Envie e analise um documento antes de confirmar.');

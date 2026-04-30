@@ -9,7 +9,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Validation\Rule;
 
-class CreateTransactionAction extends AbstractAction
+class CreateExpenseTransactionAction extends AbstractAction
 {
     /**
      * @return array<string, \Illuminate\Validation\Rule|string>
@@ -36,14 +36,13 @@ class CreateTransactionAction extends AbstractAction
     public function execute(array $input): mixed
     {
         $validated = $this->validate($input);
-
+        $validated['type'] = 'out';
         Gate::authorize('create', Transaction::class);
 
         return Transaction::create([
             ...$validated,
-            'type' => 'out',
             'status' => TransactionStatusEnum::PUBLISHED,
-            'user_id' => Auth::id(),
+            'user_id' => Auth::user()->id,
         ]);
     }
 }

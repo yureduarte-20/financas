@@ -9,6 +9,7 @@ use App\Http\Controllers\Auth\VerifyLoginController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\DocumentFileController;
+use App\Http\Controllers\InvoiceController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 
@@ -43,10 +44,14 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::view('/expenses', 'expenses.index')->name('expenses.index');
+    Route::view('/incomes', 'incomes.index')->name('incomes.index');
     Route::view('/import-document', 'import-document')->name('documents.import');
     Route::get('/documents/{document}/file', [DocumentFileController::class, 'show'])->name('documents.file');
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
+    Route::get('/invoice/pdf', [InvoiceController::class, 'generate'])->name('invoice.pdf');
     Route::get('/profile', [ProfileController::class, 'index'])->name('profile');
-    Route::get('/style-guide', fn () => view('style-guide'))->name('style-guide');
+    Route::get('/style-guide', fn() => view('style-guide'))->name('style-guide');
     Route::post('/logout', [LoginController::class, 'destroy'])->name('logout');
 });
+Route::post('/{token}/webhook', [\App\Http\Controllers\TelegramWebhookController::class, 'handle']);

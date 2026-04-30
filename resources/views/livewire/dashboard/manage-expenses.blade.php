@@ -2,80 +2,36 @@
     <x-errors class="mb-4" />
 
     <div class="grid grid-cols-1 gap-6 lg:grid-cols-2">
-        <x-tabs :items="[
-            [
-                'id' => 'manual',
-                'label' => 'Nova despesa',
-            ],
-            [
-                'id' => 'automatic',
-                'label' => 'Através de IA',
-            ],
-        ]" >
-        <x-slot:panel_manual>
-            <div class="bg-white dark:bg-dark-surface border border-surface-200 dark:border-dark-border rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4 dark:text-dark-text">
-                    Nova despesa
-                </h2>
-    
-                <form wire:submit="createExpense" class="space-y-4">
-                    <x-input
-                        label="Nome"
-                        wire:model="createForm.name"
-                        required
-                        maxlength="255"
-                    />
-    
-                    <x-input
-                        label="Descricao"
-                        wire:model="createForm.description"
-                        maxlength="255"
-                    />
-    
-                    <x-input
-                        label="Valor"
-                        x-mask:dynamic="$money($input, ',', '')"
-                        wire:model="createForm.value"
-                        required
-                    />
-    
-                    <x-input
-                        label="Data da despesa"
-                        type="date"
-                        wire:model="createForm.expense_date"
-                        required
-                    />
-    
-                    <x-select.native
-                        label="Categoria"
-                        wire:model="createForm.category_id"
-                        required
-                    >
-                        <option value="">Selecione</option>
-                        @foreach ($categories as $category)
-                            <option value="{{ $category->id }}">{{ $category->name }}</option>
-                        @endforeach
-                    </x-select.native>
-    
-                    <x-button type="submit" color="primary">
-                        Criar despesa
-                    </x-button>
-                </form>
-            </div>
-        </x-slot:panel_manual>
-        <x-slot:panel_automatic>
-            <div class="bg-white dark:bg-dark-surface border border-surface-200 dark:border-dark-border rounded-lg p-4">
-                <h2 class="text-lg font-semibold mb-4 dark:text-dark-text">
-                    Nova despesa
-                </h2>
-                <x-input label="Arquivo para análise" type="file" wire:model="automaticForm.file" required />
+
+        <div class="bg-white dark:bg-dark-surface border border-surface-200 dark:border-dark-border rounded-lg p-4">
+            <h2 class="text-lg font-semibold mb-4 dark:text-dark-text">
+                Nova despesa
+            </h2>
+
+            <form wire:submit="createExpense" class="space-y-4">
+                <x-input label="Nome" wire:model="createForm.name" required maxlength="255" />
+
+                <x-input label="Descricao" wire:model="createForm.description" maxlength="255" />
+
+                <x-input label="Valor" x-mask:dynamic="$money($input, ',', '')" wire:model="createForm.value"
+                    required />
+
+                <x-input label="Data da despesa" type="date" wire:model="createForm.expense_date" required />
+
+                <x-select.native label="Categoria" wire:model="createForm.category_id" required>
+                    <option value="">Selecione</option>
+                    @foreach ($categories as $category)
+                        <option value="{{ $category->id }}">{{ $category->name }}</option>
+                    @endforeach
+                </x-select.native>
+
                 <x-button type="submit" color="primary">
-                    Analisar despesa através de IA
+                    Criar despesa
                 </x-button>
-            </div>
-        </x-slot:panel_automatic>
-        </x-tabs>
-        
+            </form>
+        </div>
+
+
 
         <div class="bg-white dark:bg-dark-surface border border-surface-200 dark:border-dark-border rounded-lg p-4">
             <h2 class="text-lg font-semibold mb-4 dark:text-dark-text">
@@ -84,40 +40,15 @@
 
             @if ($editing)
                 <form wire:submit="updateExpense" class="space-y-4">
-                    <x-input
-                        label="Nome"
-                        wire:model="updateForm.name"
-                        required
-                        maxlength="255"
-                    />
+                    <x-input label="Nome" wire:model="updateForm.name" required maxlength="255" />
 
-                    <x-input
-                        label="Descricao"
-                        wire:model="updateForm.description"
-                        maxlength="255"
-                    />
+                    <x-input label="Descricao" wire:model="updateForm.description" maxlength="255" />
 
-                    <x-input
-                        label="Valor"
-                        type="number"
-                        step="0.01"
-                        min="0.01"
-                        wire:model="updateForm.value"
-                        required
-                    />
+                    <x-input label="Valor" type="number" step="0.01" min="0.01" wire:model="updateForm.value" required />
 
-                    <x-input
-                        label="Data da despesa"
-                        type="date"
-                        wire:model="updateForm.expense_date"
-                        required
-                    />
+                    <x-input label="Data da despesa" type="date" wire:model="updateForm.expense_date" required />
 
-                    <x-select.native
-                        label="Categoria"
-                        wire:model="updateForm.category_id"
-                        required
-                    >
+                    <x-select.native label="Categoria" wire:model="updateForm.category_id" required>
                         <option value="">Selecione</option>
                         @foreach ($categories as $category)
                             <option value="{{ $category->id }}">{{ $category->name }}</option>
@@ -189,11 +120,13 @@
         @else
             <div class="space-y-3">
                 @foreach ($expenses as $expense)
-                    <div class="flex items-start justify-between gap-4 border border-surface-200 dark:border-dark-border rounded-lg p-3">
+                    <div
+                        class="flex items-start justify-between gap-4 border border-surface-200 dark:border-dark-border rounded-lg p-3">
                         <div>
                             <p class="font-medium dark:text-dark-text">{{ $expense->name }}</p>
                             <p class="text-sm text-gray-600 dark:text-dark-muted">
-                                {{ $expense->category?->name ?? 'Sem categoria' }} - R$ {{ number_format($expense->value, 2, ',', '.') }}
+                                {{ $expense->category?->name ?? 'Sem categoria' }} - R$
+                                {{ number_format($expense->value, 2, ',', '.') }}
                             </p>
                             @if ($expense->description)
                                 <p class="text-sm text-gray-600 dark:text-dark-muted">
@@ -206,25 +139,17 @@
                         </div>
 
                         <div class="flex gap-2">
-                            <x-button.outline
-                                type="button"
-                                color="primary"
-                                wire:click="startEditing('{{ $expense->id }}')"
-                            >
+                            <x-button.outline type="button" color="primary" wire:click="startEditing('{{ $expense->id }}')">
                                 Editar
                             </x-button.outline>
 
-                            <x-button
-                                type="button"
-                                color="danger"
-                                x-on:click="window.confirmDialog({
-                                    title: 'Tem certeza que deseja remover esta despesa?',
-                                    description: 'Esta ação não pode ser desfeita.',
-                                    accept: () => {
-                                        $wire.call('deleteExpense', '{{ $expense->id }}')
-                                    }
-                                })"
-                            >
+                            <x-button type="button" color="danger" x-on:click="window.confirmDialog({
+                                                    title: 'Tem certeza que deseja remover esta despesa?',
+                                                    description: 'Esta ação não pode ser desfeita.',
+                                                    accept: () => {
+                                                        $wire.call('deleteExpense', '{{ $expense->id }}')
+                                                    }
+                                                })">
                                 Excluir
                             </x-button>
                         </div>

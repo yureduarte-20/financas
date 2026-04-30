@@ -69,6 +69,68 @@ As páginas da aplicação **devem ser construídas utilizando os componentes Bl
 
 ---
 
+## ⚙️ Actions — Centralização das Regras de Negócio
+
+Toda **regra de negócio** da aplicação **deve** ser encapsulada em uma **Action**. Esse padrão garante que a lógica crítica (validação, autorização, persistência) fique centralizada, testável e desacoplada do mecanismo de entrada (Livewire, API, comando CLI, webhook Telegram, etc.).
+
+### 📁 Estrutura
+
+As Actions ficam em `app/Actions/` e estendem a classe base abstrata [`AbstractAction`](app/Actions/AbstractAction.php):
+
+```
+app/Actions/
+├── AbstractAction.php          # Classe base com validacao e execucao
+├── Auth/                       # Actions de autenticacao
+├── Category/                   # CRUD de categorias
+├── Profile/                    # Atualizacao de perfil/senha
+└── Transaction/                # CRUD de transacoes (despesas e receitas)
+```
+
+### 🧩 Anatomia de uma Action
+
+Toda Action concreta deve implementar dois métodos:
+
+| Método | Retorno | Descrição |
+|--------|---------|-----------|
+| `rules()` | `array<string, Rule\|string>` | Regras de validação do input (Laravel Validation) |
+| `execute(array $input): mixed` | `mixed` | Lógica principal: autorizar, persistir, retornar resultado |
+
+A validação é feita automaticamente pela classe base através do método `validate()`, chamado dentro de `execute()`.
+
+### ✅ Benefícios
+
+1. **Regras de negócio centralizadas** — Não se espalham entre Controllers, Livewire Components ou Jobs.
+2. **Testabilidade isolada** — Cada Action pode ser testada unitariamente sem depender de HTTP ou Livewire.
+3. **Reutilização entre canais** — A mesma Action pode ser chamada pelo formulário Livewire, pelo bot do Telegram (via `HandlerCommandsJob`) ou por um comando Artisan.
+4. **Validação explícita** — O método `rules()` define claramente quais campos são esperados e seus formatos.
+5. **Autorização centralizada** — O `Gate::authorize()` é chamado dentro da `execute()`, garantindo que nenhum fluxo bypass a política de acesso.
+
+### 🔗 Integração com Livewire Forms
+
+Os formulários Livewire estendem [`AbstractActionForm`](app/Livewire/Forms/AbstractActionForm.php) e se vinculam a uma Action através do método `getAction()`:
+
+```php
+class CreateIncomeTransactionForm extends AbstractActionForm
+{
+    public string $name = '';
+    public string $value = '';
+    // ...
+
+    public function getAction(): \App\Actions\AbstractAction
+    {
+        return app()->make(\App\Actions\Transaction\CreateIncomeTransactionAction::class);
+    }
+}
+```
+
+O método `submit()` do form executa: validação → Action → retorno, de forma padronizada.
+
+### ⚠️ Regra de Ouro
+
+> Nunca escreva lógica de negócio diretamente em Controllers, Livewire Components ou Views. **Crie uma Action** e delegue a ela a execução.
+
+---
+
 ## 🎨 Design System & Cores
 
 O projeto utiliza um sistema de **Tokens Semânticos** configurado no `resources/css/app.css` (Tailwind CSS v4). Isso garante que a identidade visual seja consistente e fácil de manter.

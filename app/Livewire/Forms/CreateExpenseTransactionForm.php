@@ -15,6 +15,6 @@ class CreateExpenseTransactionForm extends AbstractActionForm
 
     public function getAction(): \App\Actions\AbstractAction
     {
-        return app()->make(\App\Actions\Transaction\CreateTransactionAction::class);
+        return app()->make(\App\Actions\Transaction\CreateExpenseTransactionAction::class);
     }
 }

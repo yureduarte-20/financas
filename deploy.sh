@@ -1,0 +1,113 @@
+#!/bin/bash
+
+# ==============================================================================
+# SCRIPT DE DEPLOY AUTOMATIZADO COM TELEGRAM E LOGS
+# ==============================================================================
+
+# --- 1. CONFIGURAÇÕES ---
+BASE_DIR="/home/yure/www/financas"
+ENV_FILE="$BASE_DIR/.env.deploy"
+LOGFILE="$BASE_DIR/storage/logs/deploy.log"
+
+# --- 2. CARREGAR VARIÁVEIS DE AMBIENTE ---
+if [ -f "$ENV_FILE" ]; then
+    source "$ENV_FILE"
+else
+    echo "⚠️ Aviso: Arquivo .env.deploy não encontrado. Notificações do Telegram não funcionarão."
+fi
+
+# --- 3. FUNÇÕES AUXILIARES ---
+
+# Função para adicionar Timestamp em cada linha do log
+timestamp() {
+  while read line; do
+    echo "[$(date '+%Y-%m-%d %H:%M:%S')] $line"
+  done
+}
+
+# Função para enviar mensagem ao Telegram
+send_telegram() {
+    local message="$1"
+    local type="$2" # pode ser "info" ou "error"
+
+    # Verifica se tem token configurado
+    if [[ -z "$TG_BOT_TOKEN" || -z "$TG_CHAT_ID" ]]; then
+        return
+    fi
+
+    curl -s -X POST "https://api.telegram.org/bot$TG_BOT_TOKEN/sendMessage" \
+        -d chat_id="$TG_CHAT_ID" \
+        -d text="$message" \
+        -d parse_mode="HTML" \
+        -d disable_web_page_preview="true" > /dev/null
+}
+
+# Função executada em caso de ERRO (Trap)
+handle_error() {
+    echo "❌ ERRO CRÍTICO: O script foi interrompido."
+    send_telegram "🚨 <b>FALHA NO DEPLOY!</b>%0A%0AO processo encontrou um erro e parou.%0A📂 <i>Verifique o log em: $LOGFILE</i>" "error"
+}
+
+# --- 4. PREPARAÇÃO DO AMBIENTE ---
+
+# Ativa o handler de erro: Se qualquer comando falhar, roda handle_error
+trap 'handle_error' ERR
+
+# Redireciona toda a saída (stdout e stderr) para a função timestamp -> log e tela
+exec > >(timestamp | tee -a "$LOGFILE") 2>&1
+
+# Garante que o script pare imediatamente se um comando retornar erro
+set -e
+
+# --- 5. INÍCIO DO DEPLOY ---
+
+echo "========================================"
+echo "INICIANDO DEPLOY AUTOMATIZADO"
+echo "========================================"
+
+# Envia notificação de início
+send_telegram "🚀 <b>Deploy Iniciado</b>%0A📦 Projeto: Ordem de Serviços Eletrotecnica Duarte" "info"
+
+# Entra no diretório
+cd "$BASE_DIR"
+
+echo "⬇️ Puxando alterações do Git..."
+git pull origin main
+
+echo "📦 Instalando dependências PHP (Composer)..."
+send_telegram "📦 <b>Instalando dependências PHP (Composer)...</b>%0A📦 Projeto: Ordem de Serviços Eletrotecnica Duarte" "info"
+# --no-interaction: Não pergunta nada
+# --no-dev: Não instala pacotes de teste (phpunit, etc) em produção
+# --prefer-dist: Mais rápido
+docker compose exec app composer install --no-interaction --prefer-dist --optimize-autoloader
+
+echo "📦 Instalando dependências JS (NPM)..."
+# npm ci apaga a node_modules e instala exatamente o que está no lock (mais seguro)
+docker compose exec app npm ci
+
+echo "🔨 Compilando Assets (Build)..."
+send_telegram "🔨 <b>Compilando Assets (Build)...</b>%0A📦 Projeto: Ordem de Serviços Eletrotecnica Duarte" "info"
+docker compose exec app npm run build
+
+echo "🗄️ Migrando Banco de Dados..."
+send_telegram "🗄️ <b>Migrando Banco de Dados...</b>%0A📦 Projeto: Ordem de Serviços Eletrotecnica Duarte" "info"
+docker compose exec app php artisan migrate --force
+
+echo "🧹 Otimizando e Limpando Caches..."
+docker compose exec app php artisan optimize
+docker compose stop queue
+docker compose start queue
+
+echo "========================================"
+echo "DEPLOY CONCLUÍDO COM SUCESSO"
+echo "========================================"
+
+# --- 6. FINALIZAÇÃO ---
+
+# Remove o trap para não disparar erro na saída normal
+trap - ERR
+
+# Envia notificação de sucesso
+send_telegram "✅ <b>Deploy Finalizado com Sucesso!</b>%0A✨ Sistema atualizado e cache renovado." "info"
+
+exit 0
