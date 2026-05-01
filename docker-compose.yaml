@@ -1,0 +1,71 @@
+version: "3.7"
+services:
+  app:
+    build:
+      args:
+        user: ${USER}
+        uid: 1000
+      context: ./
+      dockerfile: ./docker-compose/app/Dockerfile
+    image: financas-pessoal
+    container_name: financas-pessoal-app
+    restart: unless-stopped
+    working_dir: /var/www/
+    volumes:
+      - ./:/var/www
+    environment:
+      - TZ=America/Santarem
+      - DOCKER_BUILDKIT=0
+    networks:
+      - npm
+    # --- LIMITES DE RECURSOS ---
+    deploy:
+      resources:
+        limits:
+          cpus: '1'  
+          memory: 1G    # Máximo de RAM que o container pode usar
+        reservations:
+          memory: 512M    # Garante que o container tenha ao menos isso reservado
+  queue:
+    image: financas-pessoal # Reutiliza a imagem construída pelo serviço 'app'
+    container_name: financas-pessoal-queue
+    restart: unless-stopped
+    working_dir: /var/www/
+    command: php artisan queue:work --verbose --tries=3 --timeout=90
+    volumes:
+      - ./:/var/www
+    environment:
+      - TZ=America/Santarem
+    depends_on:
+      - app
+    networks:
+      - npm
+    deploy:
+      resources:
+        limits:
+          cpus: '1'     # Workers costumam consumir CPU em picos
+          memory: 1G
+        reservations:
+          memory: 512M
+  nginx:
+    image: nginx:alpine
+    container_name: financas-pessoal-nginx
+    restart: unless-stopped
+    expose:
+      - 80
+    volumes:
+      - ./:/var/www
+      - ./docker-compose/nginx:/etc/nginx/conf.d/
+    environment:
+      - TZ=America/Santarem
+    networks:
+      - npm
+    # --- LIMITES DE RECURSOS ---
+    deploy:
+      resources:
+        limits:
+          cpus: '0.5'     # Nginx é muito leve, 25% é suficiente
+          memory: 128M
+networks:
+  npm:
+    external: true

@@ -2,7 +2,7 @@
 
 namespace App\Telegram\Commands;
 
-use App\Actions\Transaction\CreateTransactionAction;
+use App\Actions\Transaction\CreateExpenseTransactionAction;
 use App\Models\Category;
 use App\Models\Transaction;
 use Carbon\Carbon;
@@ -52,7 +52,7 @@ class AddIncomeCommand extends LoggedInCommand
         $dataRaw = $this->argument('data');
         $dataParsed = $this->parseDate($dataRaw);
         $incomeDate = $dataParsed ?: now()->format('Y-m-d');
-        $action = app()->make(CreateTransactionAction::class);
+        $action = app()->make(CreateExpenseTransactionAction::class);
         try {
             // 5. Execução
             $action->execute([

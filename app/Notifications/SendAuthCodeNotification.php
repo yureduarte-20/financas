@@ -3,10 +3,11 @@
 namespace App\Notifications;
 
 use Illuminate\Bus\Queueable;
+use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class SendAuthCodeNotification extends Notification
+class SendAuthCodeNotification extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -16,7 +17,8 @@ class SendAuthCodeNotification extends Notification
     public function __construct(
         protected string $code,
         protected string $type
-    ) {}
+    ) {
+    }
 
     /**
      * Get the notification's delivery channels.
@@ -34,7 +36,7 @@ class SendAuthCodeNotification extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         $actionText = $this->type === 'registration' ? 'verificar seu cadastro' : 'completar seu login';
-        
+
         return (new MailMessage)
             ->subject('Seu código de verificação - FinançasPessoais')
             ->greeting('Olá!')

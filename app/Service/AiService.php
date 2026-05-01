@@ -56,7 +56,7 @@ class AiService
                         [
                             'type' => 'image_url',
                             'image_url' => [
-                                'url' => 'data:'.$mimeType.';base64,'.$imageBase64,
+                                'url' => 'data:' . $mimeType . ';base64,' . $imageBase64,
                             ],
                         ],
                     ]
@@ -80,10 +80,10 @@ class AiService
             '***********',
             (string) $text
         ) ?? '';
-
+        $text = preg_replace('/\s*\d{11}\s*/', '***********', $text);
         $max = 60000;
         if (strlen($text) > $max) {
-            $text = substr($text, 0, $max)."\n...[documento truncado para análise]";
+            $text = substr($text, 0, $max) . "\n...[documento truncado para análise]";
         }
 
         return $text;
@@ -164,15 +164,15 @@ PROMPT;
         }
 
         $decoded = json_decode($trimmed, true);
-        if (! is_array($decoded)) {
+        if (!is_array($decoded)) {
             throw new \RuntimeException('A IA não retornou um JSON válido. Tente outro arquivo ou ajuste o modelo nas configurações.');
         }
-        Log::info('json response: '.$trimmed );
+        Log::info('json response: ' . $trimmed);
 
         $itens = [];
         if (isset($decoded['itens']) && is_array($decoded['itens'])) {
             foreach ($decoded['itens'] as $item) {
-                if (! is_array($item)) {
+                if (!is_array($item)) {
                     continue;
                 }
                 $itens[] = [
@@ -183,7 +183,7 @@ PROMPT;
                 ];
             }
         }
-        Log::info('items response: '.json_encode($itens) );
+        Log::info('items response: ' . json_encode($itens));
         $missing = [];
         if (isset($decoded['campos_nao_identificados']) && is_array($decoded['campos_nao_identificados'])) {
             foreach ($decoded['campos_nao_identificados'] as $field) {

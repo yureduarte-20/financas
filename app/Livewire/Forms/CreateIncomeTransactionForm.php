@@ -1,10 +1,13 @@
 <?php
 
 namespace App\Livewire\Forms;
+
 use Livewire\Attributes\Locked;
 
-class CreateExpenseTransactionForm extends AbstractActionForm
+class CreateIncomeTransactionForm extends AbstractActionForm
 {
+    #[Locked]
+    public string $type = 'income';
     public string $name = '';
     public ?string $description = null;
     public string $value = '';
@@ -15,6 +18,6 @@ class CreateExpenseTransactionForm extends AbstractActionForm
 
     public function getAction(): \App\Actions\AbstractAction
     {
-        return app()->make(\App\Actions\Transaction\CreateExpenseTransactionAction::class);
+        return app()->make(\App\Actions\Transaction\CreateIncomeTransactionAction::class);
     }
 }

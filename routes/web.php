@@ -44,6 +44,8 @@ Route::middleware('guest')->group(function () {
 
 Route::middleware('auth')->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::view('/expenses', 'expenses.index')->name('expenses.index');
+    Route::view('/incomes', 'incomes.index')->name('incomes.index');
     Route::view('/import-document', 'import-document')->name('documents.import');
     Route::get('/documents/{document}/file', [DocumentFileController::class, 'show'])->name('documents.file');
     Route::get('/categories', [CategoryController::class, 'index'])->name('categories.index');
