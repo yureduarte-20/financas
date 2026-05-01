@@ -59,8 +59,8 @@ class AddIncomeCommand extends LoggedInCommand
                 'category_id' => $categoryId,
                 'type' => 'income',
                 'value' => $amount,
-                'name' => "Receita adicionada no telegram de R$ {$amount}",
-                'description' => $description,
+                'name' => str($description)->isNotEmpty() ? $description : "Receita adicionada no telegram de R$ {$amount}",
+                'description' => "Receita adicionada no telegram de R$ {$amount}", $description,
                 'expense_date' => $incomeDate
             ]);
         } catch (ValidationException $ex) {

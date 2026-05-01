@@ -54,8 +54,8 @@ class AddExpenseCommand extends LoggedInCommand
             'category_id' => $categoryId,
             'type' => 'out',
             'value' => $valor,
-            'name' => "Despesa adicionada no telegram de R$ {$valor}",
-            'description' => $description,
+            'name' => str($description)->isNotEmpty() ? $description : "Despesa adicionada no telegram de R$ {$valor}",
+            'description' => "Despesa adicionada no telegram de R$ {$valor}",
             'expense_date' => $expenseDate
         ]);
 
