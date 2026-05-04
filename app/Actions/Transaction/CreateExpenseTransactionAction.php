@@ -36,7 +36,7 @@ class CreateExpenseTransactionAction extends AbstractAction
     public function execute(array $input): mixed
     {
         $validated = $this->validate($input);
-        $validated['type'] = 'out';
+        $validated['type'] ??= 'out';
         Gate::authorize('create', Transaction::class);
 
         return Transaction::create([
