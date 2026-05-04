@@ -181,6 +181,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Custom Validation Rules
+    |--------------------------------------------------------------------------
+    */
+
+    'allowed_email_domain' => 'O cadastro é permitido apenas para e-mails pessoais (Gmail, Hotmail, Outlook, etc.). Não são aceitos e-mails corporativos.',
+
+    /*
+    |--------------------------------------------------------------------------
     | Custom Validation Attributes
     |--------------------------------------------------------------------------
     |

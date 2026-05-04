@@ -186,6 +186,14 @@ return [
 
     /*
     |--------------------------------------------------------------------------
+    | Custom Validation Rules
+    |--------------------------------------------------------------------------
+    */
+
+    'allowed_email_domain' => 'Registration is only allowed for personal email addresses (Gmail, Hotmail, Outlook, etc.). Corporate email addresses are not accepted.',
+
+    /*
+    |--------------------------------------------------------------------------
     | Custom Validation Attributes
     |--------------------------------------------------------------------------
     |

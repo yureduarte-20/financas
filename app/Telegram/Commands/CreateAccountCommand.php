@@ -6,6 +6,7 @@ use App\Actions\Auth\RegisterUserAction;
 use App\Models\AuthCode;
 use App\Models\User;
 use App\Notifications\TelegramSyncAuthCodeNotification;
+use App\Rules\AllowedEmailDomain;
 use Cache;
 use Hash;
 use Str;
@@ -35,6 +36,15 @@ class CreateAccountCommand extends Command
         if (empty($name)) {
             return $this->replyWithMessage([
                 'text' => 'O nome é obrigatório.'
+            ]);
+        }
+
+        // Valida dominio de email (apenas emails pessoais/permitidos)
+        $domain = substr(strrchr($email, '@'), 1);
+        if (!in_array(strtolower($domain), AllowedEmailDomain::ALLOWED_DOMAINS, true)) {
+            return $this->replyWithMessage([
+                'text' => 'O cadastro é permitido apenas para e-mails pessoais (Gmail, Hotmail, Outlook, etc.). Não são aceitos e-mails corporativos.',
+                'parse_mode' => 'HTML'
             ]);
         }
         $exists = User::where('email', $email)->orWhere('telegram_chat_id', $chat_id)->exists();
