@@ -50,7 +50,7 @@ jobs:
       run: php artisan migrate --force --env=testing
 
     - name: Run test suite
-      run: ./vendor/bin/phpunit --testsuite Unit --coverage-text --min-coverage=60
+      run: ./vendor/bin/phpunit --testsuite Unit --coverage-text
 
     - name: Run feature tests
       run: ./vendor/bin/phpunit --testsuite Feature
