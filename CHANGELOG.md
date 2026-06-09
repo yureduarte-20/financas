@@ -19,6 +19,12 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
   - Endpoint para criar uma categoria (`POST /api/categories`).
   - Endpoint para atualizar uma categoria (`PUT /api/categories/{category}`).
   - Endpoint para excluir uma categoria (`DELETE /api/categories/{category}`).
+- **API REST para Transações (CRUD):**
+  - Endpoint para listar todas as transações do usuário autenticado, com suporte a ordenação decrescente por data e filtro por tipo (`GET /api/transactions?type=out|income`).
+  - Endpoint para exibir detalhes de uma transação específica com seu relacionamento de categoria (`GET /api/transactions/{transaction}`).
+  - Endpoint para criar uma transação (`POST /api/transactions`), despachando para a Action correta com base no `type` (`out` ou `income`).
+  - Endpoint para atualizar uma transação (`PUT /api/transactions/{transaction}`), despachando dinamicamente para as Actions correspondentes.
+  - Endpoint para excluir uma transação (`DELETE /api/transactions/{transaction}`), despachando dinamicamente para as Actions correspondentes.
 - **Actions dedicadas:**
   - `ApiRegisterAction` em `app/Actions/Auth/ApiRegisterAction.php` para registrar usuário e gerar código.
   - `ApiLoginAction` em `app/Actions/Auth/ApiLoginAction.php` para validar credenciais e solicitar código.
@@ -26,6 +32,7 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 - **Controller de API:**
   - `AuthController` em `app/Http/Controllers/Api/AuthController.php` contendo os handlers das requisições JSON.
   - `CategoryController` em `app/Http/Controllers/Api/CategoryController.php` contendo os handlers do CRUD.
+  - `TransactionController` em `app/Http/Controllers/Api/TransactionController.php` contendo os handlers do CRUD de transações.
 - **Middleware:**
   - `ForceJsonResponse` em `app/Http/Middleware/ForceJsonResponse.php` para garantir cabeçalhos `Accept: application/json` nas rotas de API.
 - **Rotas de API:**
@@ -33,6 +40,7 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
 - **Testes de Integração (Feature):**
   - Suite de testes completa em `tests/Feature/ApiAuthTest.php` validando os fluxos felizes e exceções com asserções REST completas.
   - Suite de testes completa em `tests/Feature/ApiCategoryTest.php` cobrindo o CRUD de categorias, validação e autorização por usuário.
+  - Suite de testes completa em `tests/Feature/ApiTransactionTest.php` cobrindo o CRUD de transações, filtragem, validações e autorizações.
 
 ### Modificado
 - `app/Models/User.php`: Adicionada a trait `Laravel\Sanctum\HasApiTokens` para permitir a emissão de tokens.
