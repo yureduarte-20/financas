@@ -1,0 +1,1444 @@
+{
+    "openapi": "3.0.0",
+    "info": {
+        "title": "Finanças Pessoais API",
+        "description": "API de controle financeiro pessoal com autenticação por token Sanctum e verificação de dois fatores (2FA).",
+        "version": "1.0.0"
+    },
+    "servers": [
+        {
+            "url": "/",
+            "description": "Servidor Principal"
+        }
+    ],
+    "paths": {
+        "/api/auth/register": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Registrar um novo usuário",
+                "description": "Cria uma conta de usuário e dispara o envio de um código 2FA de 6 dígitos via e-mail.",
+                "operationId": "c7bb21a0d87049e161b8e4c9b0d909f2",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "email",
+                                    "password",
+                                    "password_confirmation"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "João Silva"
+                                    },
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "joao@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    },
+                                    "password_confirmation": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Usuário registrado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Usuário registrado com sucesso. Por favor, verifique seu e-mail com o código enviado."
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "9c1c9ff5-5858-45bf-97c3-bc7948a4c84d"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "João Silva"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "joao@example.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Erro de validação nos campos informados."
+                    }
+                }
+            }
+        },
+        "/api/auth/login": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Iniciar o login (Fase 1)",
+                "description": "Valida as credenciais (e-mail e senha) e envia um código 2FA de 6 dígitos para o e-mail cadastrado.",
+                "operationId": "dd51a484b7fa0f97c7680fdbde14cf5f",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "password"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "joao@example.com"
+                                    },
+                                    "password": {
+                                        "type": "string",
+                                        "format": "password",
+                                        "example": "password123"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Credenciais corretas. Código 2FA enviado.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Código de verificação enviado para o seu e-mail."
+                                        },
+                                        "email": {
+                                            "type": "string",
+                                            "example": "joao@example.com"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Credenciais inválidas."
+                    },
+                    "422": {
+                        "description": "Erro de validação (campos obrigatórios)."
+                    }
+                }
+            }
+        },
+        "/api/auth/verify-code": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Confirmar código 2FA e obter token (Fase 2)",
+                "description": "Valida o código de 6 dígitos enviado por e-mail e gera o token de acesso Sanctum.",
+                "operationId": "29564ddf07960c1a2c60526d2a6b676a",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "code",
+                                    "device_name"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "joao@example.com"
+                                    },
+                                    "code": {
+                                        "type": "string",
+                                        "example": "123456"
+                                    },
+                                    "device_name": {
+                                        "type": "string",
+                                        "example": "Celular João"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Token gerado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Autenticação realizada com sucesso."
+                                        },
+                                        "token": {
+                                            "type": "string",
+                                            "example": "1|abcdefghijklmnop..."
+                                        },
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "9c1c9ff5-5858-45bf-97c3-bc7948a4c84d"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "João Silva"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "joao@example.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Código inválido ou expirado."
+                    }
+                }
+            }
+        },
+        "/api/auth/resend-code": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Reenviar código de ativação/2FA",
+                "description": "Gera e reenvia um novo código de verificação para o e-mail informado.",
+                "operationId": "d007880d833063ee4371e9771079a032",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "email",
+                                    "type"
+                                ],
+                                "properties": {
+                                    "email": {
+                                        "type": "string",
+                                        "format": "email",
+                                        "example": "joao@example.com"
+                                    },
+                                    "type": {
+                                        "type": "string",
+                                        "example": "api_login",
+                                        "enum": [
+                                            "registration",
+                                            "api_login"
+                                        ]
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Código reenviado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Novo código de verificação enviado para o seu e-mail."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "422": {
+                        "description": "Parâmetros inválidos."
+                    }
+                }
+            }
+        },
+        "/api/auth/logout": {
+            "post": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Revogar token de acesso (Logout)",
+                "description": "Invalida o token Sanctum atual utilizado na requisição.",
+                "operationId": "df9bdc6c7a6d9f20b983526b2ec0f698",
+                "responses": {
+                    "200": {
+                        "description": "Logout efetuado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Logout realizado com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/auth/user": {
+            "get": {
+                "tags": [
+                    "Autenticação"
+                ],
+                "summary": "Obter dados do usuário logado",
+                "description": "Retorna as informações de cadastro do usuário atualmente autenticado.",
+                "operationId": "015ae3b99f0678ec8fe0a02409751660",
+                "responses": {
+                    "200": {
+                        "description": "Dados do usuário.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "user": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "9c1c9ff5-5858-45bf-97c3-bc7948a4c84d"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "João Silva"
+                                                },
+                                                "email": {
+                                                    "type": "string",
+                                                    "example": "joao@example.com"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories": {
+            "get": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Listar todas as categorias",
+                "description": "Retorna a lista de categorias que pertencem ao usuário autenticado, ordenadas por nome.",
+                "operationId": "ac9c4d978ea4e5b72915ca9728e5b8b1",
+                "responses": {
+                    "200": {
+                        "description": "Lista de categorias.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "format": "uuid",
+                                                        "example": "9c1c9ff5-5858-45bf-97c3-bc7948a4c84d"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Alimentação"
+                                                    },
+                                                    "description": {
+                                                        "type": "string",
+                                                        "example": "Supermercado e refeições"
+                                                    },
+                                                    "user_id": {
+                                                        "type": "string",
+                                                        "format": "uuid",
+                                                        "example": "e129e061-0b86-4fb4-8975-d91d17983637"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Criar uma nova categoria",
+                "description": "Cadastra uma categoria associada ao usuário autenticado.",
+                "operationId": "cca49a87d9b0ebb9a98ad7c154b71737",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Transporte"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Combustível, Uber e passagens"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Categoria criada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoria criada com sucesso."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Transporte"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Combustível, Uber e passagens"
+                                                },
+                                                "user_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "e129e061-0b86-4fb4-8975-d91d17983637"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    },
+                    "422": {
+                        "description": "Erro de validação (ex: nome faltando ou descrição muito curta)."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/categories/{category}": {
+            "get": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Exibir detalhes de uma categoria",
+                "description": "Retorna os dados de uma categoria específica. Apenas o proprietário da categoria pode acessá-la.",
+                "operationId": "ff3ab984d3fe877eb16da6009394d694",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "description": "UUID da categoria",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes da categoria.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Transporte"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Combustível, Uber e passagens"
+                                                },
+                                                "user_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "e129e061-0b86-4fb4-8975-d91d17983637"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    },
+                    "403": {
+                        "description": "Não autorizado (a categoria pertence a outro usuário)."
+                    },
+                    "404": {
+                        "description": "Categoria não encontrada."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Atualizar uma categoria",
+                "description": "Atualiza os campos de uma categoria existente pertencente ao usuário logado.",
+                "operationId": "3146e96866d62a90bd01a7070fd61470",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "description": "UUID da categoria",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Transporte e Viagens"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Gastos com transporte geral e viagens corporativas"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Categoria atualizada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoria atualizada com sucesso."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Transporte e Viagens"
+                                                },
+                                                "description": {
+                                                    "type": "string",
+                                                    "example": "Gastos com transporte geral e viagens corporativas"
+                                                },
+                                                "user_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "e129e061-0b86-4fb4-8975-d91d17983637"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    },
+                    "403": {
+                        "description": "Não autorizado (a categoria pertence a outro usuário)."
+                    },
+                    "404": {
+                        "description": "Categoria não encontrada."
+                    },
+                    "422": {
+                        "description": "Erro de validação nos dados enviados."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Categorias"
+                ],
+                "summary": "Excluir uma categoria",
+                "description": "Remove uma categoria pertencente ao usuário logado do sistema.",
+                "operationId": "88c22abd8149aea4b3bdcb280a0fddf7",
+                "parameters": [
+                    {
+                        "name": "category",
+                        "in": "path",
+                        "description": "UUID da categoria",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Categoria excluída com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Categoria excluída com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    },
+                    "403": {
+                        "description": "Não autorizado (a categoria pertence a outro usuário)."
+                    },
+                    "404": {
+                        "description": "Categoria não encontrada."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/reports": {
+            "get": {
+                "tags": [
+                    "Relatórios"
+                ],
+                "summary": "Gerar relatório financeiro",
+                "description": "Compila o resumo financeiro (totais de receitas, despesas, saldo), o detalhamento por categorias e a lista de transações com base em filtros opcionais de data, tipo e categoria.",
+                "operationId": "ce9eb7c7d1f25d450f3ae67fa66b89bb",
+                "parameters": [
+                    {
+                        "name": "start_date",
+                        "in": "query",
+                        "description": "Filtra transações a partir desta data (formato YYYY-MM-DD)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-06-01"
+                        }
+                    },
+                    {
+                        "name": "end_date",
+                        "in": "query",
+                        "description": "Filtra transações até esta data (formato YYYY-MM-DD). Deve ser igual ou posterior à data de início.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "date",
+                            "example": "2026-06-30"
+                        }
+                    },
+                    {
+                        "name": "category_id",
+                        "in": "query",
+                        "description": "Filtra apenas transações da categoria informada. Deve pertencer ao usuário logado.",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid",
+                            "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                        }
+                    },
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filtra por tipo de transação ('out' para despesa, 'income' para receita)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "out",
+                                "income"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Relatório consolidado gerado com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "summary": {
+                                                    "properties": {
+                                                        "total_income": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 3500
+                                                        },
+                                                        "total_expense": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 1200
+                                                        },
+                                                        "balance": {
+                                                            "type": "number",
+                                                            "format": "float",
+                                                            "example": 2300
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                },
+                                                "breakdown": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "category_id": {
+                                                                "type": "string",
+                                                                "format": "uuid",
+                                                                "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                                            },
+                                                            "category_name": {
+                                                                "type": "string",
+                                                                "example": "Transporte"
+                                                            },
+                                                            "total": {
+                                                                "type": "number",
+                                                                "format": "float",
+                                                                "example": 1200
+                                                            },
+                                                            "count": {
+                                                                "type": "integer",
+                                                                "example": 8
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "transactions": {
+                                                    "type": "array",
+                                                    "items": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "format": "uuid",
+                                                                "example": "e440e061-0b86-4fb4-8975-d91d17983637"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Aluguel"
+                                                            },
+                                                            "value": {
+                                                                "type": "string",
+                                                                "example": "1200.00"
+                                                            },
+                                                            "type": {
+                                                                "type": "string",
+                                                                "example": "out"
+                                                            },
+                                                            "expense_date": {
+                                                                "type": "string",
+                                                                "format": "date-time",
+                                                                "example": "2026-06-05T00:00:00.000000Z"
+                                                            },
+                                                            "category_id": {
+                                                                "type": "string",
+                                                                "format": "uuid",
+                                                                "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    },
+                    "422": {
+                        "description": "Parâmetros inválidos (ex: data de término anterior à de início, UUID de categoria inválido)."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/transactions": {
+            "get": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Listar todas as transações",
+                "description": "Retorna a lista de transações (despesas e receitas) do usuário autenticado, ordenada por data em ordem decrescente.",
+                "operationId": "9b50e29e364179ebde24ac5fc59cd442",
+                "parameters": [
+                    {
+                        "name": "type",
+                        "in": "query",
+                        "description": "Filtra por tipo de transação ('out' para despesa, 'income' para receita)",
+                        "required": false,
+                        "schema": {
+                            "type": "string",
+                            "enum": [
+                                "out",
+                                "income"
+                            ]
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Lista de transações.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "type": "array",
+                                            "items": {
+                                                "properties": {
+                                                    "id": {
+                                                        "type": "string",
+                                                        "format": "uuid",
+                                                        "example": "e440e061-0b86-4fb4-8975-d91d17983637"
+                                                    },
+                                                    "name": {
+                                                        "type": "string",
+                                                        "example": "Combustível"
+                                                    },
+                                                    "value": {
+                                                        "type": "string",
+                                                        "example": "150.00"
+                                                    },
+                                                    "type": {
+                                                        "type": "string",
+                                                        "example": "out"
+                                                    },
+                                                    "expense_date": {
+                                                        "type": "string",
+                                                        "format": "date-time",
+                                                        "example": "2026-06-09T00:00:00.000000Z"
+                                                    },
+                                                    "category": {
+                                                        "properties": {
+                                                            "id": {
+                                                                "type": "string",
+                                                                "format": "uuid",
+                                                                "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                                            },
+                                                            "name": {
+                                                                "type": "string",
+                                                                "example": "Transporte"
+                                                            }
+                                                        },
+                                                        "type": "object"
+                                                    }
+                                                },
+                                                "type": "object"
+                                            }
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "post": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Criar uma nova transação",
+                "description": "Cadastra uma transação (despesa ou receita) para o usuário autenticado.",
+                "operationId": "54eaa3952808f639d46f969f4c8b98c5",
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "type",
+                                    "name",
+                                    "value",
+                                    "expense_date",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "type": {
+                                        "type": "string",
+                                        "example": "out",
+                                        "enum": [
+                                            "out",
+                                            "income"
+                                        ]
+                                    },
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Almoço de Negócios"
+                                    },
+                                    "value": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 45.5
+                                    },
+                                    "expense_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-06-09"
+                                    },
+                                    "category_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Restaurante Sabor"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "201": {
+                        "description": "Transação criada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transação criada com sucesso."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "f550e061-0b86-4fb4-8975-d91d17983637"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Almoço de Negócios"
+                                                },
+                                                "value": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 45.5
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "out"
+                                                },
+                                                "expense_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-06-09T00:00:00.000000Z"
+                                                },
+                                                "category_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    },
+                    "422": {
+                        "description": "Erro de validação nos campos informados."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        },
+        "/api/transactions/{transaction}": {
+            "get": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Exibir detalhes de uma transação",
+                "description": "Retorna os dados detalhados de uma transação específica, incluindo sua categoria correspondente.",
+                "operationId": "846b687ea89d64602c002df14e07b802",
+                "parameters": [
+                    {
+                        "name": "transaction",
+                        "in": "path",
+                        "description": "UUID da transação",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Detalhes da transação.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "f550e061-0b86-4fb4-8975-d91d17983637"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Almoço de Negócios"
+                                                },
+                                                "value": {
+                                                    "type": "string",
+                                                    "example": "45.50"
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "out"
+                                                },
+                                                "expense_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-06-09T00:00:00.000000Z"
+                                                },
+                                                "category": {
+                                                    "properties": {
+                                                        "id": {
+                                                            "type": "string",
+                                                            "format": "uuid",
+                                                            "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                                        },
+                                                        "name": {
+                                                            "type": "string",
+                                                            "example": "Transporte"
+                                                        }
+                                                    },
+                                                    "type": "object"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    },
+                    "403": {
+                        "description": "Não autorizado (a transação pertence a outro usuário)."
+                    },
+                    "404": {
+                        "description": "Transação não encontrada."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "put": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Atualizar uma transação",
+                "description": "Atualiza os dados de uma transação específica que pertença ao usuário logado.",
+                "operationId": "df36b362db8d9d4b25b5c8a24053a8a2",
+                "parameters": [
+                    {
+                        "name": "transaction",
+                        "in": "path",
+                        "description": "UUID da transação",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "requestBody": {
+                    "required": true,
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "required": [
+                                    "name",
+                                    "value",
+                                    "expense_date",
+                                    "category_id"
+                                ],
+                                "properties": {
+                                    "name": {
+                                        "type": "string",
+                                        "example": "Almoço Executivo"
+                                    },
+                                    "value": {
+                                        "type": "number",
+                                        "format": "float",
+                                        "example": 120
+                                    },
+                                    "expense_date": {
+                                        "type": "string",
+                                        "format": "date",
+                                        "example": "2026-06-09"
+                                    },
+                                    "category_id": {
+                                        "type": "string",
+                                        "format": "uuid",
+                                        "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                    },
+                                    "description": {
+                                        "type": "string",
+                                        "example": "Reunião de Alinhamento com time"
+                                    }
+                                },
+                                "type": "object"
+                            }
+                        }
+                    }
+                },
+                "responses": {
+                    "200": {
+                        "description": "Transação atualizada com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transação atualizada com sucesso."
+                                        },
+                                        "data": {
+                                            "properties": {
+                                                "id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "f550e061-0b86-4fb4-8975-d91d17983637"
+                                                },
+                                                "name": {
+                                                    "type": "string",
+                                                    "example": "Almoço Executivo"
+                                                },
+                                                "value": {
+                                                    "type": "number",
+                                                    "format": "float",
+                                                    "example": 120
+                                                },
+                                                "type": {
+                                                    "type": "string",
+                                                    "example": "out"
+                                                },
+                                                "expense_date": {
+                                                    "type": "string",
+                                                    "format": "date-time",
+                                                    "example": "2026-06-09T00:00:00.000000Z"
+                                                },
+                                                "category_id": {
+                                                    "type": "string",
+                                                    "format": "uuid",
+                                                    "example": "a9ef52eb-5460-449e-b9ef-dcd41bb0b793"
+                                                }
+                                            },
+                                            "type": "object"
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    },
+                    "403": {
+                        "description": "Não autorizado (a transação pertence a outro usuário)."
+                    },
+                    "404": {
+                        "description": "Transação não encontrada."
+                    },
+                    "422": {
+                        "description": "Erro de validação nos campos informados."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            },
+            "delete": {
+                "tags": [
+                    "Transações"
+                ],
+                "summary": "Excluir uma transação",
+                "description": "Exclui permanentemente uma transação do usuário logado.",
+                "operationId": "cdb3a161edf4b91189ecc95d452d98eb",
+                "parameters": [
+                    {
+                        "name": "transaction",
+                        "in": "path",
+                        "description": "UUID da transação",
+                        "required": true,
+                        "schema": {
+                            "type": "string",
+                            "format": "uuid"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Transação excluída com sucesso.",
+                        "content": {
+                            "application/json": {
+                                "schema": {
+                                    "properties": {
+                                        "message": {
+                                            "type": "string",
+                                            "example": "Transação excluída com sucesso."
+                                        }
+                                    },
+                                    "type": "object"
+                                }
+                            }
+                        }
+                    },
+                    "401": {
+                        "description": "Não autenticado."
+                    },
+                    "403": {
+                        "description": "Não autorizado (a transação pertence a outro usuário)."
+                    },
+                    "404": {
+                        "description": "Transação não encontrada."
+                    }
+                },
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ]
+            }
+        }
+    },
+    "components": {
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "description": "Insira o token recebido no fluxo de verificação 2FA (formato: Bearer <token>)",
+                "name": "Authorization",
+                "in": "header",
+                "bearerFormat": "JWT",
+                "scheme": "bearer"
+            }
+        }
+    },
+    "tags": [
+        {
+            "name": "Autenticação",
+            "description": "Autenticação"
+        },
+        {
+            "name": "Categorias",
+            "description": "Categorias"
+        },
+        {
+            "name": "Relatórios",
+            "description": "Relatórios"
+        },
+        {
+            "name": "Transações",
+            "description": "Transações"
+        }
+    ]
+}

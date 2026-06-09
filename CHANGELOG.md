@@ -46,8 +46,13 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
   - Suite de testes completa em `tests/Feature/ApiCategoryTest.php` cobrindo o CRUD de categorias, validação e autorização por usuário.
   - Suite de testes completa em `tests/Feature/ApiTransactionTest.php` cobrindo o CRUD de transações, filtragem, validações e autorizações.
   - Suite de testes completa em `tests/Feature/ApiReportTest.php` cobrindo filtros opcionais por datas (início, fim e intervalo), categorias, tipos e regras de validação.
+- **Documentação de API (Swagger/OpenAPI):**
+  - Instalação e configuração do `darkaonline/l5-swagger` para geração e exibição de documentação interativa de API.
+  - Disponibilização da interface do Swagger UI na rota `/api/documentation`.
+  - Atributos OpenAPI (PHP 8) adicionados em todos os controladores de API (`AuthController`, `CategoryController`, `TransactionController`, `ReportController`) com detalhamento de parâmetros, payloads de requisição, estruturas de resposta JSON e exemplos.
 
 ### Modificado
 - `app/Models/User.php`: Adicionada a trait `Laravel\Sanctum\HasApiTokens` para permitir a emissão de tokens.
 - `config/auth.php`: Adicionado o guard `api` utilizando o driver do `sanctum`.
 - `bootstrap/app.php`: Registrado o arquivo de rotas `api` e injetado o middleware `ForceJsonResponse` no grupo de rotas da API.
+- `composer.json` e `composer.lock`: Adicionado o pacote `darkaonline/l5-swagger` nas dependências.
