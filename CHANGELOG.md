@@ -25,14 +25,18 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
   - Endpoint para criar uma transação (`POST /api/transactions`), despachando para a Action correta com base no `type` (`out` ou `income`).
   - Endpoint para atualizar uma transação (`PUT /api/transactions/{transaction}`), despachando dinamicamente para as Actions correspondentes.
   - Endpoint para excluir uma transação (`DELETE /api/transactions/{transaction}`), despachando dinamicamente para as Actions correspondentes.
+- **API REST para Relatórios:**
+  - Endpoint para obter relatórios financeiros (`GET /api/reports`), com suporte a resumos (totais de receitas, despesas e saldo), detalhamento por categoria e listagem de transações filtradas.
 - **Actions dedicadas:**
   - `ApiRegisterAction` em `app/Actions/Auth/ApiRegisterAction.php` para registrar usuário e gerar código.
   - `ApiLoginAction` em `app/Actions/Auth/ApiLoginAction.php` para validar credenciais e solicitar código.
   - `ApiVerifyCodeAction` em `app/Actions/Auth/ApiVerifyCodeAction.php` para verificar código e gerar token.
+  - `GenerateReportAction` em `app/Actions/Report/GenerateReportAction.php` para validar parâmetros e compilar dados de relatórios.
 - **Controller de API:**
   - `AuthController` em `app/Http/Controllers/Api/AuthController.php` contendo os handlers das requisições JSON.
   - `CategoryController` em `app/Http/Controllers/Api/CategoryController.php` contendo os handlers do CRUD.
   - `TransactionController` em `app/Http/Controllers/Api/TransactionController.php` contendo os handlers do CRUD de transações.
+  - `ReportController` em `app/Http/Controllers/Api/ReportController.php` expondo o endpoint de relatórios.
 - **Middleware:**
   - `ForceJsonResponse` em `app/Http/Middleware/ForceJsonResponse.php` para garantir cabeçalhos `Accept: application/json` nas rotas de API.
 - **Rotas de API:**
@@ -41,6 +45,7 @@ Todas as mudanças notáveis neste projeto serão documentadas neste arquivo.
   - Suite de testes completa em `tests/Feature/ApiAuthTest.php` validando os fluxos felizes e exceções com asserções REST completas.
   - Suite de testes completa em `tests/Feature/ApiCategoryTest.php` cobrindo o CRUD de categorias, validação e autorização por usuário.
   - Suite de testes completa em `tests/Feature/ApiTransactionTest.php` cobrindo o CRUD de transações, filtragem, validações e autorizações.
+  - Suite de testes completa em `tests/Feature/ApiReportTest.php` cobrindo filtros opcionais por datas (início, fim e intervalo), categorias, tipos e regras de validação.
 
 ### Modificado
 - `app/Models/User.php`: Adicionada a trait `Laravel\Sanctum\HasApiTokens` para permitir a emissão de tokens.
