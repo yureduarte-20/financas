@@ -30,7 +30,7 @@ class UpdateCategoryAction extends AbstractAction
         Gate::authorize('update', $category);
         $category->update([
             'name' => $validated['name'],
-            'description' => $validated['description'],
+            'description' => $validated['description'] ?? null,
         ]);
 
         return $category->refresh();
